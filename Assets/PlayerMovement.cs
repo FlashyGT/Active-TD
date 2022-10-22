@@ -6,10 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField, Range(0f, 1000f)]
     private float speed = 10f;
-    [SerializeField, Range(0f, 1000f)]
-    private float rotationSpeed = 10f;
-    [SerializeField]
-    private GameObject model;
 
     private Touch touch;
     private Vector2 touchStartPos;
@@ -20,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
-        rigidBody = model.GetComponent<Rigidbody>();
+        rigidBody = GetComponent<Rigidbody>();
     }
 
     private void Start()
