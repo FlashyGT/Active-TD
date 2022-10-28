@@ -7,6 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField, Range(0f, 1000f)]
     private float speed = 10f;
 
+    private bool touching;
     private Touch touch;
     private Vector2 touchStartPos;
     private Vector2 touchDirection;
@@ -26,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        touching = Input.touchCount > 0;
         GetTouch();
     }
 
@@ -37,7 +39,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetTouch()
     {
-        if (Input.touchCount > 0)
+        if (touching)
         {
             touch = Input.GetTouch(0);
 
@@ -59,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         Vector3 newVelocity = Vector3.zero;
-        if (Input.touchCount > 0)
+        if (touching)
         {
             newVelocity = touchVelocity * speed * Time.deltaTime;
         }
@@ -68,7 +70,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void Rotate()
     {
-        Quaternion directionQ = Quaternion.LookRotation(rigidBody.velocity);
+        Quaternion directionQ = transform.rotation;
+        if (touching)
+        {
+            directionQ = Quaternion.LookRotation(rigidBody.velocity);
+        }
+        rigidBody.angularVelocity = Vector3.zero;
         rigidBody.MoveRotation(directionQ);
     }
 }
