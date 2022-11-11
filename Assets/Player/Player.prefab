@@ -417,7 +417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f477fd2832f02164ca2715c13071a1f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 500
+  speed: 250
   animator: {fileID: 1824255739982835391}
 --- !u!54 &1541964676986320110
 Rigidbody:
@@ -443,7 +443,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1541964676986320109}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -768,13 +768,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9501528, guid: 8f6b0c88789bc024189afa8e609cf122, type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 0fcf62486c4692642b98f25575a1d3fd, type: 3}
+    - target: {fileID: 9501528, guid: 8f6b0c88789bc024189afa8e609cf122, type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: c061d4e7c8ec1194a92eff60242ab643, type: 2}
     - target: {fileID: 13778628, guid: 8f6b0c88789bc024189afa8e609cf122, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300024, guid: 0fcf62486c4692642b98f25575a1d3fd, type: 3}
+    - target: {fileID: 13778628, guid: 8f6b0c88789bc024189afa8e609cf122, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 1523d2f06890fde45806497ba2c5af83, type: 2}
+      objectReference: {fileID: 2100000, guid: 2f97e7416a0250e4891050c30ea04f47, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f6b0c88789bc024189afa8e609cf122, type: 3}
 --- !u!95 &1824255739982835391 stripped
