@@ -11,16 +11,16 @@ TagManager:
   - 
   - Water
   - UI
-  - Building
+  - Environment
   - Pickup & Delivery
   - Upgrade
   - Enemy
-  - Fighting
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Enemy Weapon
+  - Ally Weapon
+  - Enemy Range
+  - Ally Range
+  - Barricade
   - 
   - 
   - 

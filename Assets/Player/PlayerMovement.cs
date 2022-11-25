@@ -1,37 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField, Range(0f, 1000f)]
-    private float speed = 10f;
+    [SerializeField] [Range(0f, 1000f)] private float speed = 250f;
 
-    private bool touching;
-    private Touch touch;
-    private Vector2 touchStartPos;
-    private Vector2 touchDirection;
-    private Vector3 touchVelocity;
+    private Unit _unit;
 
-    private const string runningParameter = "Running";
-
-    [SerializeField]
-    private Animator animator;
-    private Rigidbody rigidBody;
+    private Touch _touch;
+    private bool _touching;
+    private Vector2 _touchDirection;
+    private Vector2 _touchStartPos;
+    private Vector3 _touchVelocity;
 
     private void Awake()
     {
-        rigidBody = GetComponent<Rigidbody>();
-    }
-
-    private void Start()
-    {
-
+        _unit = GetComponent<Unit>();
     }
 
     private void Update()
     {
-        touching = Input.touchCount > 0;
+        _touching = Input.touchCount > 0;
         GetTouch();
     }
 
@@ -43,20 +31,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void GetTouch()
     {
-        if (touching)
+        if (_touching)
         {
-            touch = Input.GetTouch(0);
+            _touch = Input.GetTouch(0);
 
-            switch (touch.phase)
+            switch (_touch.phase)
             {
                 case TouchPhase.Began:
-                    touchStartPos = touch.position;
+                    _touchStartPos = _touch.position;
                     break;
                 case TouchPhase.Stationary:
                 case TouchPhase.Moved:
-                    touchDirection = touch.position - touchStartPos;
-                    touchVelocity = new Vector3(touchDirection.x, 0f, touchDirection.y);
-                    touchVelocity.Normalize();
+                    _touchDirection = _touch.position - _touchStartPos;
+                    _touchVelocity = new Vector3(_touchDirection.x, 0f, _touchDirection.y);
+                    _touchVelocity.Normalize();
                     break;
             }
         }
@@ -65,25 +53,27 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         Vector3 newVelocity = Vector3.zero;
-        animator.SetBool(runningParameter, false);
+        _unit.Animator.SetBool(Constants.AnimRunningParam, false);
 
-        if (touching)
+        if (_touching)
         {
-            animator.SetBool(runningParameter, true);
-            newVelocity = touchVelocity * speed * Time.deltaTime;
+            _unit.Animator.SetBool(Constants.AnimRunningParam, true);
+            newVelocity = _touchVelocity * (speed * Time.deltaTime);
         }
 
-        rigidBody.velocity = newVelocity;
+        _unit.Rigidbody.velocity = newVelocity;
     }
 
     private void Rotate()
     {
         Quaternion directionQ = transform.rotation;
-        if (touching)
+
+        if (_touching)
         {
-            directionQ = Quaternion.LookRotation(rigidBody.velocity);
+            directionQ = Quaternion.LookRotation(_unit.Rigidbody.velocity);
         }
-        rigidBody.angularVelocity = Vector3.zero;
-        rigidBody.MoveRotation(directionQ);
+
+        _unit.Rigidbody.angularVelocity = Vector3.zero;
+        _unit.Rigidbody.MoveRotation(directionQ);
     }
 }
