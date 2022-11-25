@@ -61,5 +61,9 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# IDEs
+.idea/
+.vscode/
+
 
 Assets/\@Imported_Assets.meta
