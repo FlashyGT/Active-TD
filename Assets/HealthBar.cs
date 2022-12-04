@@ -13,10 +13,11 @@ public class HealthBar : MonoBehaviour
     private float _health;
     private float _maxHealth;
 
+    #region UnityMethods
+
     private void Start()
     {
-        unit.OnDamageTake += UpdateHealthBar;
-        unit.OnUnitDeath += ResetHealthBar;
+        unit.OnDamageTaken += UpdateHealthBar;
         _maxHealth = unit.UnitHealth.MaxHealth;
     }
 
@@ -24,6 +25,8 @@ public class HealthBar : MonoBehaviour
     {
         transform.LookAt(GameManager.Instance.MainCamera.transform);
     }
+
+    #endregion
 
     private void ChangeFillAmount()
     {
@@ -46,10 +49,5 @@ public class HealthBar : MonoBehaviour
         _health = unit.UnitHealth.Health;
         ChangeFillAmount();
         ChangeColor();
-    }
-
-    private void ResetHealthBar(Unit unit)
-    {
-        container.SetActive(false);
     }
 }
