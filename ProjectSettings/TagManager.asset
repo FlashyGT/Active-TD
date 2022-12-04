@@ -12,16 +12,16 @@ TagManager:
   - Water
   - UI
   - Environment
-  - Pickup & Delivery
-  - Upgrade
-  - Enemy
-  - Player
-  - Enemy Weapon
-  - Ally Weapon
-  - Enemy Range
-  - Ally Range
   - Barricade
   - 
+  - Pickup
+  - Delivery
+  - Upgrade
+  - Player
+  - Ally Combat
+  - Enemy
+  - Enemy Combat
+  - Unit_Collision_Blocker
   - 
   - 
   - 
