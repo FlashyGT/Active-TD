@@ -1,32 +1,46 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : UnitMovement
 {
-    [SerializeField] [Range(0f, 1000f)] private float speed = 250f;
-
-    private Unit _unit;
-
     private Touch _touch;
     private bool _touching;
     private Vector2 _touchDirection;
     private Vector2 _touchStartPos;
     private Vector3 _touchVelocity;
 
-    private void Awake()
-    {
-        _unit = GetComponent<Unit>();
-    }
+    #region UnityMethods
 
-    private void Update()
+    protected override void Update()
     {
         _touching = Input.touchCount > 0;
         GetTouch();
     }
 
-    private void FixedUpdate()
+    #endregion
+
+    public override void StopMovement()
     {
-        Move();
-        Rotate();
+        Unit.Rigidbody.velocity = Vector3.zero;
+        Unit.Rigidbody.angularVelocity = Vector3.zero;
+        Unit.Animator.SetBool(Constants.AnimRunningParam, false);
+    }
+
+    protected override void Move()
+    {
+        if (!_touching)
+        {
+            StopMovement();
+            return;
+        }
+
+        Vector3 newVelocity = _touchVelocity * (speed * Time.deltaTime);
+        Unit.Rigidbody.velocity = newVelocity;
+        Unit.Animator.SetBool(Constants.AnimRunningParam, true);
+    }
+
+    protected override bool RotationNotAllowed()
+    {
+        return !_touching && Unit.Combat.Targets.Count == 0;
     }
 
     private void GetTouch()
@@ -48,32 +62,5 @@ public class PlayerMovement : MonoBehaviour
                     break;
             }
         }
-    }
-
-    private void Move()
-    {
-        Vector3 newVelocity = Vector3.zero;
-        _unit.Animator.SetBool(Constants.AnimRunningParam, false);
-
-        if (_touching)
-        {
-            _unit.Animator.SetBool(Constants.AnimRunningParam, true);
-            newVelocity = _touchVelocity * (speed * Time.deltaTime);
-        }
-
-        _unit.Rigidbody.velocity = newVelocity;
-    }
-
-    private void Rotate()
-    {
-        Quaternion directionQ = transform.rotation;
-
-        if (_touching)
-        {
-            directionQ = Quaternion.LookRotation(_unit.Rigidbody.velocity);
-        }
-
-        _unit.Rigidbody.angularVelocity = Vector3.zero;
-        _unit.Rigidbody.MoveRotation(directionQ);
     }
 }

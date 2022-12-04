@@ -8,21 +8,27 @@ public class Unit : MonoBehaviour
     public Animator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
 
-    // Used for outside scripts
-    public delegate void OnUnitDead(Unit unit);
+    [field: SerializeField] public UnitCombat Combat { get; private set; }
+    [field: SerializeField] public UnitMovement Movement { get; private set; }
 
-    public event OnUnitDead OnUnitDeath;
-
-    public delegate void OnDamageTaken();
-
-    public OnDamageTaken OnDamageTake;
-
-    [SerializeField] private UnitCombat unitCombat;
+    public event Action<Unit> OnUnitDeath;
+    public Action OnDamageTaken;
 
     // Used for this specific unit to manage components
     [SerializeField] private UnityEvent onUnitDeath;
 
     [SerializeField] private UnitSO unitSo;
+
+    #region UnityMethods
+
+    private void Awake()
+    {
+        UnitHealth = new UnitHealth(unitSo.health, unitSo.health);
+        Rigidbody = GetComponent<Rigidbody>();
+        Animator = GetComponent<Animator>();
+    }
+
+    #endregion
 
     public virtual void OnDeath()
     {
@@ -34,13 +40,6 @@ public class Unit : MonoBehaviour
     // Used for an event by the attacking animation
     protected void DealDamage()
     {
-        unitCombat.DealDamageToTargets();
-    }
-
-    private void Awake()
-    {
-        UnitHealth = new UnitHealth(unitSo.health, unitSo.health);
-        Rigidbody = GetComponent<Rigidbody>();
-        Animator = GetComponent<Animator>();
+        Combat.DealDamageToTargets();
     }
 }
