@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +17,8 @@ public class UnitMovement : MonoBehaviour
     private bool _movingToDestination;
     private bool _destinationReached;
 
+    private Coroutine _unitStuckCoroutine;
+
     #region UnityMethods
 
     private void Awake()
@@ -28,8 +31,6 @@ public class UnitMovement : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) // TODO: Remove this
         {
             _destination = GameManager.Instance.GetWorldPositionOnPlane(Input.mousePosition, 0f);
-            _pathToDestination = GameManager.Instance.GetPath(Unit.transform.position, _destination);
-
             InitMovement();
         }
     }
@@ -47,6 +48,12 @@ public class UnitMovement : MonoBehaviour
         Unit.Rigidbody.velocity = Vector3.zero;
         Unit.Rigidbody.angularVelocity = Vector3.zero;
         Unit.Animator.SetBool(Constants.AnimRunningParam, false);
+
+        if (!_destinationReached)
+        {
+            _unitStuckCoroutine = StartCoroutine(CheckUnitStuck());
+        }
+
         _movingToDestination = false;
     }
 
@@ -54,6 +61,11 @@ public class UnitMovement : MonoBehaviour
     {
         if (!_destinationReached && _pathToDestination.Count != 0)
         {
+            if (_unitStuckCoroutine != null)
+            {
+                StopCoroutine(_unitStuckCoroutine);
+            }
+
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
             _movingToDestination = true;
         }
@@ -115,6 +127,7 @@ public class UnitMovement : MonoBehaviour
 
     private void InitMovement()
     {
+        _pathToDestination = GameManager.Instance.GetPath(Unit.transform.position, _destination);
         if (_pathToDestination.Count != 0)
         {
             _pathNodeIndex = 0;
@@ -129,5 +142,15 @@ public class UnitMovement : MonoBehaviour
     {
         _destinationReached = true;
         StopMovement();
+    }
+
+    private IEnumerator CheckUnitStuck()
+    {
+        Vector3 currUnitPos = Unit.transform.position;
+        yield return new WaitForSeconds(Random.Range(1f, 2f));
+        if (Vector3.Distance(currUnitPos, Unit.transform.position) < 0.1f)
+        {
+            InitMovement();
+        }
     }
 }
