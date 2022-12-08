@@ -7,33 +7,64 @@ using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
-    [SerializeField] private List<WaveSO> waves = new();
-
-    [SerializeField] private List<SpawnPoint> spawnPoints = new();
-
     public event Action OnWaveGenerated;
 
-    private void GenerateCurrentWave(WaveSO wave)
+    [SerializeField] private List<SpawnPoint> spawnPoints = new();
+    [SerializeField] private List<WaveSO> waves = new();
+    [SerializeField] [Range(5f, 60f)] private float timeBetweenWaves = 30f; // night time duration
+
+    private int _currentWave = 0;
+    private int _amountOfUnitsInWave = 0;
+
+    #region UnityMethods
+
+    private void Start()
     {
+        GenerateCurrentWave(_currentWave);
+    }
+
+    #endregion
+
+    private void GenerateCurrentWave(int currentWave)
+    {
+        WaveSO wave = waves[currentWave];
+
         foreach (WaveObject waveObject in wave.WaveObjects)
         {
-            SpawnLocation spawnLocation = waveObject.SpawnLoc;
-            SpawnPoint spawnPoint = GetSpawnPoint(spawnLocation);
-
             List<GameObject> enemies = ObjectPooler.Instance.GetPool(waveObject.Prefab, waveObject.AmountOfUnits);
 
-            foreach (GameObject enemy in enemies)
-            {
-                if (spawnLocation == SpawnLocation.Random)
-                {
-                    spawnPoint = GetSpawnPoint(spawnLocation);
-                }
-
-                spawnPoint.UnitsToSpawn.Enqueue(enemy);
-            }
+            AddEnemiesToSpawnPoints(waveObject.SpawnLoc, enemies);
         }
 
         OnWaveGenerated?.Invoke();
+    }
+
+    private void AddEnemiesToSpawnPoints(SpawnLocation defaultSpawnLoc, List<GameObject> enemies)
+    {
+        SpawnPoint spawnPoint = GetSpawnPoint(defaultSpawnLoc);
+        foreach (GameObject enemy in enemies)
+        {
+            Unit unit = enemy.GetComponent<Unit>();
+            unit.onUnitDeath.AddListener(WaveUnitDied);
+
+            if (defaultSpawnLoc == SpawnLocation.Random)
+            {
+                spawnPoint = GetSpawnPoint(defaultSpawnLoc);
+            }
+
+            _amountOfUnitsInWave++;
+            spawnPoint.UnitsToSpawn.Enqueue(enemy);
+        }
+    }
+
+    private void WaveUnitDied()
+    {
+        _amountOfUnitsInWave--;
+
+        if (_amountOfUnitsInWave == 0)
+        {
+            StartCoroutine(WaveDefeated());
+        }
     }
 
     private SpawnPoint GetSpawnPoint(SpawnLocation spawnPoint)
@@ -48,8 +79,13 @@ public class EnemySpawner : MonoBehaviour
         return spawnPoints[index];
     }
 
-    private void Start()
+    private IEnumerator WaveDefeated()
     {
-        GenerateCurrentWave(waves[0]);
+        _currentWave++;
+        yield return new WaitForSeconds(timeBetweenWaves);
+        if (waves.Count != _currentWave)
+        {
+            GenerateCurrentWave(_currentWave);
+        }
     }
 }

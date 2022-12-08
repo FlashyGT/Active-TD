@@ -11,11 +11,12 @@ public class Unit : MonoBehaviour, IDamageable
     [field: SerializeField] public UnitCombat Combat { get; private set; }
     [field: SerializeField] public UnitMovement Movement { get; private set; }
 
+    // Used by the combat system
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
 
-    // Used for this specific unit to manage components
-    [SerializeField] private UnityEvent onUnitDeath;
+    // Used for this specific unit to manage components and callbacks for external scripts
+    public UnityEvent onUnitDeath;
 
     [SerializeField] private UnitSO unitSo;
 
