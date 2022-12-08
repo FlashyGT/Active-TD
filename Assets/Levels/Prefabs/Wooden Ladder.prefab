@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 365124931886756850}
   - component: {fileID: 375386486518611904}
   - component: {fileID: 397160421152745996}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wooden Ladder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

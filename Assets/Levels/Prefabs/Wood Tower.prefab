@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3344709488331467013}
   - component: {fileID: 3336675539910068329}
   - component: {fileID: 3344709488331467012}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wood Tower
   m_TagString: Untagged
   m_Icon: {fileID: 0}

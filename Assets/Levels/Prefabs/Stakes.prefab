@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4509326750835819258}
   - component: {fileID: 4517343521713156718}
   - component: {fileID: 4469691473846927812}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stakes
   m_TagString: Untagged
   m_Icon: {fileID: 0}

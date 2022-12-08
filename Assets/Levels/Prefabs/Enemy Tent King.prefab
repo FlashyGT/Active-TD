@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 5724124555638259659}
   - component: {fileID: 5724124555637497741}
   - component: {fileID: 5724124555636394723}
-  m_Layer: 0
+  - component: {fileID: 1623473263456772428}
+  m_Layer: 6
   m_Name: Enemy Tent King
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &1623473263456772428
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5724124555638616747}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 6.1, y: 4.6163297, z: 4.05}
+  m_Center: {x: 0.00000071525574, y: 2.3081648, z: -0.00000023841858}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9064308010324202186}
   - component: {fileID: 9064308010323172520}
   - component: {fileID: 2095876158}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mountain Grass
   m_TagString: Untagged
   m_Icon: {fileID: 0}

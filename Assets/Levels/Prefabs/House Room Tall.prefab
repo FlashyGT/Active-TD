@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4755026229447277322}
   - component: {fileID: 4755026229446301136}
   - component: {fileID: 4755026229448094293}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: House Room Tall
   m_TagString: Untagged
   m_Icon: {fileID: 0}

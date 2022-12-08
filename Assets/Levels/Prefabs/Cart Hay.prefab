@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9188639450259156338}
   - component: {fileID: 9188639450257792322}
   - component: {fileID: 9188639450259156339}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cart Hay
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3351401383502498343}
   - component: {fileID: 3351401383503724301}
   - component: {fileID: 3351401383501241504}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: House External Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}

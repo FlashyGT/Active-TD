@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1433117251119797947}
   - component: {fileID: 1433117251118808825}
   - component: {fileID: 1371134182266957689}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Rock Pile 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
