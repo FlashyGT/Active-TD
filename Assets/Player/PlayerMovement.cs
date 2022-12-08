@@ -38,6 +38,28 @@ public class PlayerMovement : UnitMovement
         Unit.Animator.SetBool(Constants.AnimRunningParam, true);
     }
 
+    protected override void Rotate()
+    {
+        if (RotationNotAllowed())
+        {
+            return;
+        }
+
+        Quaternion directionQ = Unit.transform.rotation;
+
+        if (Unit.Rigidbody.velocity != Vector3.zero)
+        {
+            directionQ = Quaternion.LookRotation(Unit.Rigidbody.velocity);
+        }
+        else if (Unit.Combat.Targets.Count != 0)
+        {
+            Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
+            directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
+        }
+
+        Unit.Rigidbody.MoveRotation(directionQ);
+    }
+
     protected override bool RotationNotAllowed()
     {
         return !_touching && Unit.Combat.Targets.Count == 0;

@@ -9,11 +9,12 @@ public class UnitMovement : MonoBehaviour
 
     protected Unit Unit;
 
+    protected bool MovingToDestination;
+
     private List<Vector3> _pathToDestination = new();
     private Vector3 _pathNodePos;
     private int _pathNodeIndex;
 
-    private bool _movingToDestination;
     private bool _destinationReached;
 
     private Coroutine _unitStuckCoroutine;
@@ -50,7 +51,7 @@ public class UnitMovement : MonoBehaviour
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
 
             _destinationReached = false;
-            _movingToDestination = true;
+            MovingToDestination = true;
         }
     }
 
@@ -65,7 +66,7 @@ public class UnitMovement : MonoBehaviour
             _unitStuckCoroutine = StartCoroutine(CheckUnitStuck());
         }
 
-        _movingToDestination = false;
+        MovingToDestination = false;
     }
 
     public void StartMovement()
@@ -78,13 +79,13 @@ public class UnitMovement : MonoBehaviour
             }
 
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
-            _movingToDestination = true;
+            MovingToDestination = true;
         }
     }
 
     protected virtual void Move()
     {
-        if (!_movingToDestination || _destinationReached)
+        if (!MovingToDestination || _destinationReached)
         {
             return;
         }
@@ -123,18 +124,13 @@ public class UnitMovement : MonoBehaviour
         {
             directionQ = Quaternion.LookRotation(Unit.Rigidbody.velocity);
         }
-        else if (Unit.Combat.Targets.Count != 0)
-        {
-            Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
-            directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
-        }
 
         Unit.Rigidbody.MoveRotation(directionQ);
     }
 
     protected virtual bool RotationNotAllowed()
     {
-        return !_movingToDestination && Unit.Combat.Targets.Count == 0;
+        return !MovingToDestination;
     }
 
     private Vector3 GetCurrentDestination()
