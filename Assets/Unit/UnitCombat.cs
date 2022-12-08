@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UnitCombat : MonoBehaviour
 {
-    public List<Unit> Targets { get; private set; }
+    public List<IDamageable> Targets { get; private set; }
 
     [SerializeField] private WeaponSO weaponSo;
 
@@ -15,20 +15,20 @@ public class UnitCombat : MonoBehaviour
     private void Awake()
     {
         _unit = GetComponentInParent<Unit>();
-        Targets = new List<Unit>();
+        Targets = new List<IDamageable>();
     }
 
     private void OnTriggerEnter(Collider coll)
     {
-        Unit unit = coll.GetComponentInParent<Unit>();
-        AddTarget(unit);
+        IDamageable obj = coll.GetComponentInParent<IDamageable>();
+        AddTarget(obj);
         _unit.Animator.SetBool(Constants.AnimAttackParam, true);
     }
 
     private void OnTriggerExit(Collider coll)
     {
-        Unit unit = coll.GetComponentInParent<Unit>();
-        RemoveTarget(unit);
+        IDamageable obj = coll.GetComponentInParent<IDamageable>();
+        RemoveTarget(obj);
         _unit.Animator.SetBool(Constants.AnimAttackParam, false);
     }
 
@@ -39,21 +39,21 @@ public class UnitCombat : MonoBehaviour
         // ToList() copies the existing list, so when damage gets dealt and a unit dies
         // we don't modify the actual _targets list, but instead a copy of it.
         // If we modify _targets directly we receive: InvalidOperationException
-        foreach (Unit unit in Targets.ToList())
+        foreach (IDamageable obj in Targets.ToList())
         {
-            GameManager.Instance.DamageUnit(unit, weaponSo.damage);
+            GameManager.Instance.DamageObject(obj, weaponSo.damage);
         }
     }
 
-    private void AddTarget(Unit unit)
+    private void AddTarget(IDamageable obj)
     {
-        Targets.Add(unit);
-        unit.OnUnitDeath += RemoveTarget;
+        Targets.Add(obj);
+        obj.OnDeath += RemoveTarget;
     }
 
-    private void RemoveTarget(Unit unit)
+    private void RemoveTarget(IDamageable obj)
     {
-        Targets.Remove(unit);
+        Targets.Remove(obj);
         if (Targets.Count == 0)
         {
             _unit.Animator.SetBool(Constants.AnimAttackParam, false);

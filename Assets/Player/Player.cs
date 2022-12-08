@@ -4,5 +4,11 @@ using UnityEngine;
 
 public class Player : Unit
 {
+    #region UnityMethods
 
+    protected override void OnEnable()
+    {
+    }
+
+    #endregion
 }

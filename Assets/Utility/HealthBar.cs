@@ -18,7 +18,7 @@ public class HealthBar : MonoBehaviour
     private void Start()
     {
         unit.OnDamageTaken += UpdateHealthBar;
-        _maxHealth = unit.UnitHealth.MaxHealth;
+        _maxHealth = unit.ObjectHealth.MaxHealth;
     }
 
     private void Update()
@@ -46,7 +46,7 @@ public class HealthBar : MonoBehaviour
             container.SetActive(true);
         }
 
-        _health = unit.UnitHealth.Health;
+        _health = unit.ObjectHealth.Health;
         ChangeFillAmount();
         ChangeColor();
     }

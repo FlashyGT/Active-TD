@@ -1,14 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UnitMovement : MonoBehaviour
 {
     [SerializeField] [Range(0f, 1000f)] protected float speed = 250f;
 
     protected Unit Unit;
-
-    private Vector3 _destination;
 
     private List<Vector3> _pathToDestination = new();
     private Vector3 _pathNodePos;
@@ -23,16 +22,11 @@ public class UnitMovement : MonoBehaviour
 
     private void Awake()
     {
-        Unit = GetComponentInParent<Unit>();
+        GetUnit();
     }
 
     protected virtual void Update()
     {
-        if (Input.GetMouseButtonDown(0)) // TODO: Remove this
-        {
-            _destination = GameManager.Instance.GetWorldPositionOnPlane(Input.mousePosition, 0f);
-            InitMovement();
-        }
     }
 
     protected virtual void FixedUpdate()
@@ -42,6 +36,23 @@ public class UnitMovement : MonoBehaviour
     }
 
     #endregion
+
+    public void InitMovement()
+    {
+        GetUnit(); // TODO: optimize
+
+        _pathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, GetCurrentDestination());
+        if (_pathToDestination.Count != 0)
+        {
+            _pathNodeIndex = 0;
+            _pathNodePos = _pathToDestination[_pathNodeIndex];
+
+            Unit.Animator.SetBool(Constants.AnimRunningParam, true);
+
+            _destinationReached = false;
+            _movingToDestination = true;
+        }
+    }
 
     public virtual void StopMovement()
     {
@@ -114,7 +125,8 @@ public class UnitMovement : MonoBehaviour
         }
         else if (Unit.Combat.Targets.Count != 0)
         {
-            directionQ = Quaternion.LookRotation(Unit.Combat.Targets[0].transform.position - Unit.transform.position);
+            Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
+            directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
         }
 
         Unit.Rigidbody.MoveRotation(directionQ);
@@ -125,23 +137,23 @@ public class UnitMovement : MonoBehaviour
         return !_movingToDestination && Unit.Combat.Targets.Count == 0;
     }
 
-    private void InitMovement()
+    private Vector3 GetCurrentDestination()
     {
-        _pathToDestination = GameManager.Instance.GetPath(Unit.transform.position, _destination);
-        if (_pathToDestination.Count != 0)
-        {
-            _pathNodeIndex = 0;
-            _pathNodePos = _pathToDestination[_pathNodeIndex];
-            Unit.Animator.SetBool(Constants.AnimRunningParam, true);
-            _destinationReached = false;
-            _movingToDestination = true;
-        }
+        return new Vector3(0f, 0f, 41.16f); // TODO: implement
     }
 
     private void ReachedTarget()
     {
         _destinationReached = true;
         StopMovement();
+    }
+
+    private void GetUnit()
+    {
+        if (Unit == null)
+        {
+            Unit = GetComponentInParent<Unit>();
+        }
     }
 
     private IEnumerator CheckUnitStuck()
