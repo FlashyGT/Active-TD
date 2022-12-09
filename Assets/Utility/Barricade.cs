@@ -1,18 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 {
     public ObjectHealth ObjectHealth { get; set; }
 
+    // Used by the combat system
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
 
+    // Used for this specific object to manage components and callbacks for external scripts
+    public UnityEvent onObjDeath;
+
     [SerializeField] private BarricadeSO barricadeSo;
 
-    [SerializeField] private GameObject attackPoint;
+    [SerializeField] private Transform attackPoint;
     [SerializeField] private float attackPointXDeviation = 5f;
 
     private int _currLevel = 0;
@@ -36,6 +40,7 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 
     public void OnDead()
     {
+        onObjDeath.Invoke();
         OnDeath?.Invoke(this);
     }
 
@@ -45,6 +50,13 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
     }
 
     #endregion
+
+    public Vector3 GetAttackPoint()
+    {
+        Vector3 pointPos = attackPoint.position;
+        float xDeviation = Random.Range(-attackPointXDeviation, attackPointXDeviation);
+        return new Vector3(pointPos.x + xDeviation, 0f, pointPos.z);
+    }
 
     public void Upgrade()
     {

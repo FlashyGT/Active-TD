@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public Camera MainCamera { get; private set; }
     [field: SerializeField] public GameObject Player { get; private set; }
 
-    [field: SerializeField] public Barricade Barricade { get; private set; }
-
     #region UnityMethods
 
     private void Awake()

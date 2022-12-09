@@ -159,7 +159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bc1f8e8eb286684b82c4fb59384a664, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitMovement: {fileID: 6878161878139310519}
   unitCollider: {fileID: 1541964676106650516}
 --- !u!1 &2132927709
 GameObject:
@@ -3347,6 +3346,11 @@ PrefabInstance:
       propertyPath: container
       value: 
       objectReference: {fileID: 699580430790024709}
+    - target: {fileID: 9080911800247990034, guid: 06745f190d7369f4ca4d0ad37fe0a4da,
+        type: 3}
+      propertyPath: objWithIDamageable
+      value: 
+      objectReference: {fileID: 1541964676986320109}
     - target: {fileID: 9080911800589837644, guid: 06745f190d7369f4ca4d0ad37fe0a4da,
         type: 3}
       propertyPath: m_Layer

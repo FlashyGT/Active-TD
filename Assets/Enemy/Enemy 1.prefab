@@ -3346,6 +3346,11 @@ PrefabInstance:
       propertyPath: container
       value: 
       objectReference: {fileID: 2077074246331332421}
+    - target: {fileID: 9080911800247990034, guid: 06745f190d7369f4ca4d0ad37fe0a4da,
+        type: 3}
+      propertyPath: objWithIDamageable
+      value: 
+      objectReference: {fileID: 4812924139549213418}
     - target: {fileID: 9080911800589837644, guid: 06745f190d7369f4ca4d0ad37fe0a4da,
         type: 3}
       propertyPath: m_Layer

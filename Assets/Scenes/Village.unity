@@ -446,11 +446,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 1541964676986320109, guid: 4a6987057dbc3cc4884084c224e1c86e,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1541964676986320111, guid: 4a6987057dbc3cc4884084c224e1c86e,
         type: 3}
       propertyPath: m_RootOrder
@@ -469,7 +464,7 @@ PrefabInstance:
     - target: {fileID: 1541964676986320111, guid: 4a6987057dbc3cc4884084c224e1c86e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 41.16
+      value: 20.52
       objectReference: {fileID: 0}
     - target: {fileID: 1541964676986320111, guid: 4a6987057dbc3cc4884084c224e1c86e,
         type: 3}
@@ -515,21 +510,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6716867008878430619, guid: 0b288377ac0294d49bc21f58c797189b,
-        type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 963194227}
-    - target: {fileID: 6716867009514719463, guid: 0b288377ac0294d49bc21f58c797189b,
-        type: 3}
-      propertyPath: <Player>k__BackingField
-      value: 
-      objectReference: {fileID: 1817697937}
-    - target: {fileID: 6716867009514719463, guid: 0b288377ac0294d49bc21f58c797189b,
-        type: 3}
-      propertyPath: <MainCamera>k__BackingField
-      value: 
-      objectReference: {fileID: 963194227}
     - target: {fileID: 6716867010490709246, guid: 0b288377ac0294d49bc21f58c797189b,
         type: 3}
       propertyPath: m_Name
@@ -590,6 +570,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7593841723506485495, guid: 0b288377ac0294d49bc21f58c797189b,
+        type: 3}
+      propertyPath: <Player>k__BackingField
+      value: 
+      objectReference: {fileID: 1817697937}
+    - target: {fileID: 7593841723506485495, guid: 0b288377ac0294d49bc21f58c797189b,
+        type: 3}
+      propertyPath: <MainCamera>k__BackingField
+      value: 
+      objectReference: {fileID: 963194227}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b288377ac0294d49bc21f58c797189b, type: 3}
 --- !u!1001 &6774449941999547342
@@ -599,21 +589,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 6774449940519114620, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774449940952454482, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774449941156113582, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6774449941284347354, guid: 858e4d8917d0284488d8f1746bc9798f,
         type: 3}
       propertyPath: m_RootOrder
@@ -673,16 +648,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Environment
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774449941364177253, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: timeBetweenWaves
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774449942359017760, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 858e4d8917d0284488d8f1746bc9798f, type: 3}
