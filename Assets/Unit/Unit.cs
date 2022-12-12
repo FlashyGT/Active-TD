@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class Unit : MonoBehaviour, IDamageable
 {
     public ObjectHealth ObjectHealth { get; set; }
-    public Animator Animator { get; private set; }
+    [field: SerializeField] public Animator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
 
     [field: SerializeField] public UnitCombat Combat { get; private set; }
@@ -26,7 +26,6 @@ public class Unit : MonoBehaviour, IDamageable
     {
         ObjectHealth = new ObjectHealth(unitSo.health, unitSo.health);
         Rigidbody = GetComponent<Rigidbody>();
-        Animator = GetComponent<Animator>();
     }
 
     #endregion
@@ -55,11 +54,5 @@ public class Unit : MonoBehaviour, IDamageable
     public void InitUnit()
     {
         Movement.InitMovement();
-    }
-
-    // Used for an event by the attacking animation
-    protected void DealDamage()
-    {
-        Combat.DealDamageToTargets();
     }
 }

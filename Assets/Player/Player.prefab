@@ -270,6 +270,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1541964675995203013}
+  - component: {fileID: 1243156818}
+  - component: {fileID: 1243156819}
   m_Layer: 12
   m_Name: Model
   m_TagString: Untagged
@@ -294,6 +296,38 @@ Transform:
   m_Father: {fileID: 1541964676986320111}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &1243156818
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541964675995203017}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 0fcf62486c4692642b98f25575a1d3fd, type: 3}
+  m_Controller: {fileID: 9100000, guid: c061d4e7c8ec1194a92eff60242ab643, type: 2}
+  m_CullingMode: 1
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1243156819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541964675995203017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e61a55a67d6ca8542a51b613be3389de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1541964676106650522
 GameObject:
   m_ObjectHideFlags: 0
@@ -351,7 +385,6 @@ GameObject:
   - component: {fileID: 1541964676986320111}
   - component: {fileID: 5134226239173420453}
   - component: {fileID: 1541964676986320110}
-  - component: {fileID: 1383683802}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -392,6 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab322f26be796454ea9a5a4737434414, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Animator>k__BackingField: {fileID: 1243156818}
   <Combat>k__BackingField: {fileID: 1788168320}
   <Movement>k__BackingField: {fileID: 6878161878139310519}
   onUnitDeath:
@@ -486,26 +520,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 1
---- !u!95 &1383683802
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1541964676986320109}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 0fcf62486c4692642b98f25575a1d3fd, type: 3}
-  m_Controller: {fileID: 9100000, guid: c061d4e7c8ec1194a92eff60242ab643, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &7220368224829074917
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,8 +565,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Radius: 2
+  m_Center: {x: 0, y: 0, z: -1}
 --- !u!54 &1788168321
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3169,6 +3183,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 250
+  pathNodeDistanceThreshold: 0.5
+  testing: 1
 --- !u!1001 &1541964676884484390
 PrefabInstance:
   m_ObjectHideFlags: 0
