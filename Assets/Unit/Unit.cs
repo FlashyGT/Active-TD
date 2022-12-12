@@ -29,11 +29,6 @@ public class Unit : MonoBehaviour, IDamageable
         Animator = GetComponent<Animator>();
     }
 
-    protected virtual void OnEnable()
-    {
-        Movement.InitMovement();
-    }
-
     #endregion
 
     #region IDamageable
@@ -43,7 +38,7 @@ public class Unit : MonoBehaviour, IDamageable
         OnDamageTaken?.Invoke();
     }
 
-    public void OnDead()
+    public virtual void OnDead()
     {
         Animator.SetTrigger(Constants.AnimDeathParam);
         onUnitDeath.Invoke();
@@ -56,6 +51,11 @@ public class Unit : MonoBehaviour, IDamageable
     }
 
     #endregion
+
+    public void InitUnit()
+    {
+        Movement.InitMovement();
+    }
 
     // Used for an event by the attacking animation
     protected void DealDamage()

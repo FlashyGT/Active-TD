@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class Player : Unit
 {
-    #region UnityMethods
-
-    protected override void OnEnable()
+    public override void OnDead()
     {
+        base.OnDead();
+        GameManager.Instance.GameLost();
     }
-
-    #endregion
 }
