@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerMovement : UnitMovement
 {
+    [SerializeField] private bool testing; // TODO: remove
+
     private Touch _touch;
     private bool _touching;
     private Vector2 _touchDirection;
@@ -10,10 +12,21 @@ public class PlayerMovement : UnitMovement
 
     #region UnityMethods
 
+    protected override void Start()
+    {
+    }
+
     protected override void Update()
     {
-        _touching = Input.touchCount > 0;
-        GetTouch();
+        if (!testing)
+        {
+            _touching = Input.touchCount > 0;
+            GetTouch();
+        }
+        else
+        {
+            DesktopControls();
+        }
     }
 
     #endregion
@@ -47,14 +60,14 @@ public class PlayerMovement : UnitMovement
 
         Quaternion directionQ = Unit.transform.rotation;
 
-        if (Unit.Rigidbody.velocity != Vector3.zero)
-        {
-            directionQ = Quaternion.LookRotation(Unit.Rigidbody.velocity);
-        }
-        else if (Unit.Combat.Targets.Count != 0)
+        if (Unit.Combat.Targets.Count != 0)
         {
             Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
             directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
+        }
+        else if (Unit.Rigidbody.velocity != Vector3.zero)
+        {
+            directionQ = Quaternion.LookRotation(Unit.Rigidbody.velocity);
         }
 
         Unit.Rigidbody.MoveRotation(directionQ);
@@ -84,5 +97,21 @@ public class PlayerMovement : UnitMovement
                     break;
             }
         }
+    }
+
+    private void DesktopControls()
+    {
+        float xMove = Input.GetAxisRaw("Horizontal");
+        float zMove = Input.GetAxisRaw("Vertical");
+
+        if (xMove == 0f && zMove == 0f)
+        {
+            _touching = false;
+            return;
+        }
+
+        _touchVelocity = new Vector3(xMove, 0f, zMove);
+        _touchVelocity.Normalize();
+        _touching = true;
     }
 }
