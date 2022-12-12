@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,10 +13,12 @@ public class UnitMovement : MonoBehaviour
 
     protected bool MovingToDestination;
 
+    [SerializeField] protected float pathNodeDistanceThreshold = 0.5f;
     private List<Vector3> _pathToDestination = new();
     private Vector3 _pathNodePos;
     private int _pathNodeIndex;
 
+    private Vector3 _destination;
     private bool _destinationReached;
 
     private Coroutine _unitStuckCoroutine;
@@ -24,6 +28,10 @@ public class UnitMovement : MonoBehaviour
     private void Awake()
     {
         GetUnit();
+    }
+
+    protected virtual void Start()
+    {
     }
 
     protected virtual void Update()
@@ -38,11 +46,12 @@ public class UnitMovement : MonoBehaviour
 
     #endregion
 
-    public void InitMovement()
+    public virtual void InitMovement()
     {
         GetUnit(); // TODO: optimize
 
-        _pathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, GetCurrentDestination());
+        _destination = GetCurrentDestination();
+        _pathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, _destination);
         if (_pathToDestination.Count != 0)
         {
             _pathNodeIndex = 0;
@@ -69,7 +78,7 @@ public class UnitMovement : MonoBehaviour
         MovingToDestination = false;
     }
 
-    public void StartMovement()
+    public virtual void StartMovement()
     {
         if (!_destinationReached && _pathToDestination.Count != 0)
         {
@@ -91,7 +100,7 @@ public class UnitMovement : MonoBehaviour
         }
 
         float distanceToNode = Vector3.Distance(Unit.transform.position, _pathNodePos);
-        if (distanceToNode < 0.25f)
+        if (distanceToNode < pathNodeDistanceThreshold)
         {
             // Reached last node
             if (_pathNodeIndex == _pathToDestination.Count - 1)
@@ -133,15 +142,16 @@ public class UnitMovement : MonoBehaviour
         return !MovingToDestination;
     }
 
-    private Vector3 GetCurrentDestination()
+    protected virtual Vector3 GetCurrentDestination()
     {
-        return new Vector3(0f, 0f, 41.16f); // TODO: implement
+        throw new NotImplementedException();
     }
 
     private void ReachedTarget()
     {
         _destinationReached = true;
         StopMovement();
+        InitMovement();
     }
 
     private void GetUnit()
