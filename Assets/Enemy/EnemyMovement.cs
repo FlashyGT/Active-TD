@@ -80,7 +80,10 @@ public class EnemyMovement : UnitMovement
 
     private void TargetDied(IDamageable target)
     {
-        InitMovement();
+        if (!UnitInCombat())
+        {
+            InitMovement();
+        }
     }
 
     private bool UnitInCombat()
