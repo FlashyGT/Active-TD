@@ -13,4 +13,9 @@ public class ObjectHealth
         Health = currentHealth;
         MaxHealth = maxHealth;
     }
+
+    public bool IsDead()
+    {
+        return Health <= 0;
+    }
 }

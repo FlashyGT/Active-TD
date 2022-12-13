@@ -7,21 +7,22 @@ using Random = UnityEngine.Random;
 
 public class UnitMovement : MonoBehaviour
 {
+    public Vector3 Destination { get; private set; }
+
     [SerializeField] [Range(0f, 1000f)] protected float speed = 250f;
 
     protected Unit Unit;
 
     protected bool MovingToDestination;
+    protected bool DestinationReached;
+
+    protected Coroutine UnitStuckCoroutine;
 
     [SerializeField] protected float pathNodeDistanceThreshold = 0.5f;
-    private List<Vector3> _pathToDestination = new();
+    protected List<Vector3> PathToDestination = new();
+
     private Vector3 _pathNodePos;
     private int _pathNodeIndex;
-
-    private Vector3 _destination;
-    private bool _destinationReached;
-
-    private Coroutine _unitStuckCoroutine;
 
     #region UnityMethods
 
@@ -48,18 +49,18 @@ public class UnitMovement : MonoBehaviour
 
     public virtual void InitMovement()
     {
-        GetUnit(); // TODO: optimize
+        GetUnit();
 
-        _destination = GetCurrentDestination();
-        _pathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, _destination);
-        if (_pathToDestination.Count != 0)
+        Destination = GetCurrentDestination();
+        PathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, Destination);
+        if (PathToDestination.Count != 0)
         {
             _pathNodeIndex = 0;
-            _pathNodePos = _pathToDestination[_pathNodeIndex];
+            _pathNodePos = PathToDestination[_pathNodeIndex];
 
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
 
-            _destinationReached = false;
+            DestinationReached = false;
             MovingToDestination = true;
         }
     }
@@ -70,9 +71,9 @@ public class UnitMovement : MonoBehaviour
         Unit.Rigidbody.angularVelocity = Vector3.zero;
         Unit.Animator.SetBool(Constants.AnimRunningParam, false);
 
-        if (!_destinationReached)
+        if (!DestinationReached)
         {
-            _unitStuckCoroutine = StartCoroutine(CheckUnitStuck());
+            UnitStuckCoroutine = StartCoroutine(CheckUnitStuck());
         }
 
         MovingToDestination = false;
@@ -80,11 +81,11 @@ public class UnitMovement : MonoBehaviour
 
     public virtual void StartMovement()
     {
-        if (!_destinationReached && _pathToDestination.Count != 0)
+        if (!DestinationReached && PathToDestination.Count != 0)
         {
-            if (_unitStuckCoroutine != null)
+            if (UnitStuckCoroutine != null)
             {
-                StopCoroutine(_unitStuckCoroutine);
+                StopCoroutine(UnitStuckCoroutine);
             }
 
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
@@ -94,7 +95,7 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual void Move()
     {
-        if (!MovingToDestination || _destinationReached)
+        if (!MovingToDestination || DestinationReached)
         {
             return;
         }
@@ -103,14 +104,14 @@ public class UnitMovement : MonoBehaviour
         if (distanceToNode < pathNodeDistanceThreshold)
         {
             // Reached last node
-            if (_pathNodeIndex == _pathToDestination.Count - 1)
+            if (_pathNodeIndex == PathToDestination.Count - 1)
             {
                 ReachedTarget();
                 return;
             }
 
             _pathNodeIndex++;
-            _pathNodePos = _pathToDestination[_pathNodeIndex];
+            _pathNodePos = PathToDestination[_pathNodeIndex];
         }
 
         Vector3 direction = _pathNodePos - Unit.transform.position;
@@ -147,28 +148,28 @@ public class UnitMovement : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    private void ReachedTarget()
-    {
-        _destinationReached = true;
-        StopMovement();
-        InitMovement();
-    }
-
-    private void GetUnit()
-    {
-        if (Unit == null)
-        {
-            Unit = GetComponentInParent<Unit>();
-        }
-    }
-
-    private IEnumerator CheckUnitStuck()
+    protected IEnumerator CheckUnitStuck()
     {
         Vector3 currUnitPos = Unit.transform.position;
         yield return new WaitForSeconds(Random.Range(1f, 2f));
         if (Vector3.Distance(currUnitPos, Unit.transform.position) < 0.1f)
         {
             InitMovement();
+        }
+    }
+
+    private void ReachedTarget()
+    {
+        DestinationReached = true;
+        StopMovement();
+        InitMovement();
+    }
+
+    private void GetUnit() // TODO: optimize
+    {
+        if (Unit == null)
+        {
+            Unit = GetComponentInParent<Unit>();
         }
     }
 }

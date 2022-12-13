@@ -36,9 +36,4 @@ public class UnitCollisionBlocker : MonoBehaviour
             _unit.Movement.StopMovement();
         }
     }
-
-    private void OnCollisionExit(Collision other)
-    {
-        _unit.Movement.StartMovement();
-    }
 }

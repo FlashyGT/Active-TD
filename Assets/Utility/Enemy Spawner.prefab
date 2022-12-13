@@ -349,4 +349,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8618914789f834c4b92f5baf22d26819, type: 2}
   - {fileID: 11400000, guid: 90324db36299528429a8a42c7c147886, type: 2}
   - {fileID: 11400000, guid: ca8c87994829c1944a2fb533f152755d, type: 2}
-  timeBetweenWaves: 30
+  timeBetweenWaves: 5

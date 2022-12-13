@@ -18,10 +18,18 @@ MonoBehaviour:
     <Prefab>k__BackingField: {fileID: 4812924139549213418, guid: 98732a321d2c15f4eb32d05fcbd2a222,
       type: 3}
   - <SpawnLoc>k__BackingField: 5
-    <AmountOfUnits>k__BackingField: 1
+    <AmountOfUnits>k__BackingField: 2
     <Prefab>k__BackingField: {fileID: 4812924139549213418, guid: 98732a321d2c15f4eb32d05fcbd2a222,
       type: 3}
   - <SpawnLoc>k__BackingField: 3
+    <AmountOfUnits>k__BackingField: 2
+    <Prefab>k__BackingField: {fileID: 4812924139549213418, guid: 98732a321d2c15f4eb32d05fcbd2a222,
+      type: 3}
+  - <SpawnLoc>k__BackingField: 2
+    <AmountOfUnits>k__BackingField: 2
+    <Prefab>k__BackingField: {fileID: 4812924139549213418, guid: 98732a321d2c15f4eb32d05fcbd2a222,
+      type: 3}
+  - <SpawnLoc>k__BackingField: 4
     <AmountOfUnits>k__BackingField: 1
     <Prefab>k__BackingField: {fileID: 4812924139549213418, guid: 98732a321d2c15f4eb32d05fcbd2a222,
       type: 3}

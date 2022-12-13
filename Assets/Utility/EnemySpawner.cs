@@ -44,7 +44,7 @@ public class EnemySpawner : MonoBehaviour
         SpawnPoint spawnPoint = GetSpawnPoint(defaultSpawnLoc);
         foreach (GameObject enemy in enemies)
         {
-            Unit unit = enemy.GetComponent<Unit>();
+            Unit unit = enemy.GetComponent<Unit>(); // TODO: optimize
             unit.onUnitDeath.AddListener(WaveUnitDied);
 
             if (defaultSpawnLoc == SpawnLocation.Random)
@@ -73,7 +73,7 @@ public class EnemySpawner : MonoBehaviour
 
         if (spawnPoint == SpawnLocation.Random)
         {
-            index = Random.Range(0, spawnPoints.Count);
+            index = Random.Range(0, spawnPoints.Count - 1);
         }
 
         return spawnPoints[index];

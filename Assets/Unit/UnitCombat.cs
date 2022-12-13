@@ -1,20 +1,25 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class UnitCombat : MonoBehaviour
 {
+    public event Action OnCombatStarted;
+    public event Action OnCombatEnded;
+
     public List<IDamageable> Targets { get; private set; }
 
-    [SerializeField] private WeaponSO weaponSo;
+    protected Unit Unit;
 
-    private Unit _unit;
+    [SerializeField] private WeaponSO weaponSo;
 
     #region UnityMethods
 
     private void Awake()
     {
-        _unit = GetComponentInParent<Unit>();
+        Unit = GetComponentInParent<Unit>();
         Targets = new List<IDamageable>();
     }
 
@@ -22,14 +27,12 @@ public class UnitCombat : MonoBehaviour
     {
         IDamageable obj = coll.GetComponentInParent<IDamageable>();
         AddTarget(obj);
-        _unit.Animator.SetBool(Constants.AnimAttackParam, true);
     }
 
     private void OnTriggerExit(Collider coll)
     {
         IDamageable obj = coll.GetComponentInParent<IDamageable>();
         RemoveTarget(obj);
-        _unit.Animator.SetBool(Constants.AnimAttackParam, false);
     }
 
     #endregion
@@ -49,14 +52,22 @@ public class UnitCombat : MonoBehaviour
     {
         Targets.Add(obj);
         obj.OnDeath += RemoveTarget;
+
+        if (Targets.Count == 1)
+        {
+            OnCombatStarted?.Invoke();
+            Unit.Animator.SetBool(Constants.AnimAttackParam, true);
+        }
     }
 
     private void RemoveTarget(IDamageable obj)
     {
         Targets.Remove(obj);
+
         if (Targets.Count == 0)
         {
-            _unit.Animator.SetBool(Constants.AnimAttackParam, false);
+            OnCombatEnded?.Invoke();
+            Unit.Animator.SetBool(Constants.AnimAttackParam, false);
         }
     }
 }

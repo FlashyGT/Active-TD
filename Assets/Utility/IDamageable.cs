@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public interface IDamageable
@@ -15,4 +13,6 @@ public interface IDamageable
     public void OnDead();
 
     public GameObject GetGameObject();
+
+    public Vector3 GetAttackPoint();
 }

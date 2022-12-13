@@ -49,6 +49,11 @@ public class Unit : MonoBehaviour, IDamageable
         return gameObject;
     }
 
+    public Vector3 GetAttackPoint()
+    {
+        return transform.position;
+    }
+
     #endregion
 
     public void InitUnit()

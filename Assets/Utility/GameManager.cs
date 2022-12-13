@@ -53,4 +53,9 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void GameLost()
+    {
+        Time.timeScale = 0;
+    }
 }
