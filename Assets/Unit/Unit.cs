@@ -4,6 +4,8 @@ using UnityEngine.Events;
 
 public class Unit : MonoBehaviour, IDamageable
 {
+    [field: SerializeField] public UnitActionItem CarryingItem { get; set; }
+
     public ObjectHealth ObjectHealth { get; set; }
     [field: SerializeField] public Animator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
