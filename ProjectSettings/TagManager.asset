@@ -14,8 +14,8 @@ TagManager:
   - Environment
   - Barricade
   - Spawner
-  - Pickup
-  - Delivery
+  - Action
+  - 
   - Upgrade
   - Player
   - Ally Combat
