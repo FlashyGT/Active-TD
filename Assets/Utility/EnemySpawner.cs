@@ -9,12 +9,25 @@ public class EnemySpawner : MonoBehaviour
 {
     public event Action OnWaveGenerated;
 
+    public int AmountOfUnitsInWave
+    {
+        get { return _amountOfUnitsInWave; }
+        set
+        {
+            _amountOfUnitsInWave = value;
+            if (_amountOfUnitsInWave == 0)
+            {
+                StartCoroutine(WaveDefeated());
+            }
+        }
+    }
+
     [SerializeField] private List<SpawnPoint> spawnPoints = new();
     [SerializeField] private List<WaveSO> waves = new();
     [SerializeField] [Range(5f, 60f)] private float timeBetweenWaves = 30f; // night time duration
 
     private int _currentWave = 0;
-    private int _amountOfUnitsInWave = 0;
+    private int _amountOfUnitsInWave;
 
     #region UnityMethods
 
@@ -44,26 +57,13 @@ public class EnemySpawner : MonoBehaviour
         SpawnPoint spawnPoint = GetSpawnPoint(defaultSpawnLoc);
         foreach (GameObject enemy in enemies)
         {
-            Unit unit = enemy.GetComponent<Unit>(); // TODO: optimize
-            unit.onUnitDeath.AddListener(WaveUnitDied);
-
             if (defaultSpawnLoc == SpawnLocation.Random)
             {
                 spawnPoint = GetSpawnPoint(defaultSpawnLoc);
             }
 
-            _amountOfUnitsInWave++;
+            AmountOfUnitsInWave++;
             spawnPoint.UnitsToSpawn.Enqueue(enemy);
-        }
-    }
-
-    private void WaveUnitDied()
-    {
-        _amountOfUnitsInWave--;
-
-        if (_amountOfUnitsInWave == 0)
-        {
-            StartCoroutine(WaveDefeated());
         }
     }
 

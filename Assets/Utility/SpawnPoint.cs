@@ -14,7 +14,12 @@ public class SpawnPoint : MonoBehaviour
         UnitsToSpawn = new Queue<GameObject>();
 
         _enemySpawner = GetComponentInParent<EnemySpawner>();
-        _enemySpawner.OnWaveGenerated += SpawnUnit;
+        _enemySpawner.OnWaveGenerated += StartSpawning;
+    }
+
+    private void StartSpawning()
+    {
+        SpawnUnit();
     }
 
     private void SpawnUnit()
@@ -25,11 +30,17 @@ public class SpawnPoint : MonoBehaviour
         }
 
         GameObject unitGo = UnitsToSpawn.Dequeue();
-        Unit unit = unitGo.GetComponent<Unit>(); // TODO: optimize
+        Unit unit = unitGo.GetComponentInDirectChildren<Unit>(true); // TODO: optimize
 
         unitGo.transform.position = transform.position;
         unitGo.SetActive(true);
+        unit.onUnitDeath.AddListener(RemoveActiveUnit);
         unit.InitUnit();
+    }
+
+    private void RemoveActiveUnit()
+    {
+        _enemySpawner.AmountOfUnitsInWave--;
     }
 
     private void OnTriggerExit(Collider other)

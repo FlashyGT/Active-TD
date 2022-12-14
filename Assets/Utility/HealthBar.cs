@@ -9,7 +9,6 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private GameObject container;
     [SerializeField] private Image fillBar;
 
-
     // for some reason Unity doesn't allow referencing interfaces, so we use this as a workaround
     [SerializeField] private GameObject objWithIDamageable;
     private IDamageable _obj;
@@ -24,11 +23,6 @@ public class HealthBar : MonoBehaviour
         _obj = objWithIDamageable.GetComponent<IDamageable>();
         _obj.OnDamageTaken += UpdateHealthBar;
         _maxHealth = _obj.ObjectHealth.MaxHealth;
-    }
-
-    private void Update()
-    {
-        transform.LookAt(GameManager.Instance.MainCamera.transform);
     }
 
     #endregion
