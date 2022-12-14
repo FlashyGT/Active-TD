@@ -163,6 +163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4755dd27f80e3ec43ac2ff17c0490d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <CarryingItem>k__BackingField: 0
   <Animator>k__BackingField: {fileID: 6557187559656834417}
   <Combat>k__BackingField: {fileID: 8063587978377832037}
   <Movement>k__BackingField: {fileID: 4466814048850256900}
@@ -3095,7 +3096,7 @@ ParentConstraint:
   m_IsContraintActive: 1
   m_IsLocked: 1
   m_Sources:
-  - sourceTransform: {fileID: 8600570024601246071}
+  - sourceTransform: {fileID: 3860057533079617766}
     weight: 1
 --- !u!1 &8600570025755735657
 GameObject:
