@@ -36,7 +36,7 @@ public class Farm : MonoBehaviour, IUpgradeable
     {
         foreach (Garden garden in gardens)
         {
-            garden.onGardenDeath.AddListener(GardenDied);
+            garden.OnObjDeath.AddListener(GardenDied);
         }
     }
 

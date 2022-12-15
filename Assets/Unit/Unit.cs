@@ -13,12 +13,9 @@ public class Unit : MonoBehaviour, IDamageable
     [field: SerializeField] public UnitCombat Combat { get; private set; }
     [field: SerializeField] public UnitMovement Movement { get; private set; }
 
-    // Used by the combat system
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
-
-    // Used for this specific unit to manage components and callbacks for external scripts
-    public UnityEvent onUnitDeath;
+    [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
 
     [SerializeField] private UnitSO unitSo;
 
@@ -42,7 +39,7 @@ public class Unit : MonoBehaviour, IDamageable
     public virtual void OnDead()
     {
         Animator.SetTrigger(Constants.AnimDeathParam);
-        onUnitDeath.Invoke();
+        OnObjDeath.Invoke();
         OnDeath?.Invoke(this);
     }
 

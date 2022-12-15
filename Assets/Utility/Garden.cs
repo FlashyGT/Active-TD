@@ -10,9 +10,7 @@ public class Garden : MonoBehaviour, IDamageable
 
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
-
-    // Used for this specific unit to manage components and callbacks for external scripts
-    public UnityEvent onGardenDeath;
+    [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
 
     [SerializeField] private GardenSO gardenSo;
     [SerializeField] private List<GameObject> gardenStages;
@@ -46,7 +44,7 @@ public class Garden : MonoBehaviour, IDamageable
 
     public void OnDead()
     {
-        onGardenDeath.Invoke();
+        OnObjDeath.Invoke();
         OnDeath?.Invoke(this);
     }
 

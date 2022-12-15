@@ -10,6 +10,14 @@ public class EnemyMovement : UnitMovement
         Unit.Combat.OnCombatEnded += StartMovement;
     }
 
+    public override void InitMovement()
+    {
+        if (!UnitInCombat())
+        {
+            base.InitMovement();
+        }
+    }
+
     public override void StopMovement()
     {
         Unit.Rigidbody.velocity = Vector3.zero;
@@ -62,20 +70,12 @@ public class EnemyMovement : UnitMovement
 
     protected override bool RotationNotAllowed()
     {
-        return !MovingToDestination && Unit.Combat.Targets.Count == 0;
+        return !MovingToDestination && !UnitInCombat();
     }
 
-    protected override Vector3 GetCurrentDestination()
+    protected override Vector3 GetDestination()
     {
-        IDamageable target = ActionManager.Instance.GetEnemyActionDestination();
-
-        if (target == null)
-        {
-            return Unit.transform.position;
-        }
-
-        target.OnDeath += TargetDied;
-        return target.GetAttackPoint();
+        return ActionManager.Instance.GetEnemyActionDestination(Unit);
     }
 
     private void TargetDied(IDamageable target)

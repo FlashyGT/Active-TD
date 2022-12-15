@@ -7,12 +7,9 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 {
     public ObjectHealth ObjectHealth { get; set; }
 
-    // Used by the combat system
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
-
-    // Used for this specific object to manage components and callbacks for external scripts
-    public UnityEvent onBarricadeDeath;
+    [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
 
     [SerializeField] private BarricadeSO barricadeSo;
 
@@ -40,7 +37,7 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 
     public void OnDead()
     {
-        onBarricadeDeath.Invoke();
+        OnObjDeath.Invoke();
         OnDeath?.Invoke(this);
     }
 

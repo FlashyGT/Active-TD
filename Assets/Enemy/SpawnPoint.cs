@@ -34,7 +34,7 @@ public class SpawnPoint : MonoBehaviour
 
         unitGo.transform.position = transform.position;
         unitGo.SetActive(true);
-        unit.onUnitDeath.AddListener(RemoveActiveUnit);
+        unit.OnObjDeath.AddListener(RemoveActiveUnit);
         unit.InitUnit();
     }
 

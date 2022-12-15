@@ -51,7 +51,7 @@ public class UnitMovement : MonoBehaviour
     {
         GetUnit();
 
-        Destination = GetCurrentDestination();
+        Destination = GetDestination();
         PathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, Destination);
         if (PathToDestination.Count != 0)
         {
@@ -143,7 +143,7 @@ public class UnitMovement : MonoBehaviour
         return !MovingToDestination;
     }
 
-    protected virtual Vector3 GetCurrentDestination()
+    protected virtual Vector3 GetDestination()
     {
         throw new NotImplementedException();
     }

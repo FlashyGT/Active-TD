@@ -25,13 +25,26 @@ public class ActionManager : MonoBehaviour
 
     #endregion
 
-    public IDamageable GetEnemyActionDestination()
+    public Vector3 GetEnemyActionDestination(Unit unit)
     {
+        IDamageable target;
+
         if (!barricade.ObjectHealth.IsDead())
         {
-            return barricade;
+            target = barricade;
+        }
+        else
+        {
+            target = farm.GetGarden();
         }
 
-        return farm.GetGarden();
+        if (target == null)
+        {
+            // No target, return units position, so it doesn't move
+            return unit.transform.position;
+        }
+
+        target.OnObjDeath.AddListener(unit.Movement.InitMovement);
+        return target.GetAttackPoint();
     }
 }
