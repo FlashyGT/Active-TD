@@ -122,7 +122,7 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual void Rotate()
     {
-        if (IsRotationAllowed())
+        if (!IsRotationAllowed())
         {
             return;
         }
@@ -139,7 +139,7 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual bool IsRotationAllowed()
     {
-        return !MovingToDestination;
+        return MovingToDestination;
     }
 
     protected virtual Vector3 GetDestination()

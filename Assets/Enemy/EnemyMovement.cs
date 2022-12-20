@@ -4,11 +4,15 @@ using UnityEngine;
 
 public class EnemyMovement : UnitMovement
 {
+    #region UnityMethods
+
     protected override void Start()
     {
         Unit.Combat.OnCombatStarted += StopMovement;
         Unit.Combat.OnCombatEnded += StartMovement;
     }
+
+    #endregion
 
     public override void InitMovement()
     {
@@ -48,7 +52,7 @@ public class EnemyMovement : UnitMovement
 
     protected override void Rotate()
     {
-        if (IsRotationAllowed())
+        if (!IsRotationAllowed())
         {
             return;
         }
@@ -70,7 +74,7 @@ public class EnemyMovement : UnitMovement
 
     protected override bool IsRotationAllowed()
     {
-        return !MovingToDestination && !IsUnitInCombat();
+        return MovingToDestination || IsUnitInCombat();
     }
 
     protected override Vector3 GetDestination()

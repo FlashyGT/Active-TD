@@ -60,7 +60,7 @@ public class PlayerMovement : UnitMovement
 
         Quaternion directionQ = Unit.transform.rotation;
 
-        if (Unit.Combat.Targets.Count != 0)
+        if (IsUnitInCombat())
         {
             Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
             directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
@@ -75,7 +75,7 @@ public class PlayerMovement : UnitMovement
 
     protected override bool IsRotationAllowed()
     {
-        return _touching || Unit.Combat.Targets.Count > 0;
+        return _touching || IsUnitInCombat();
     }
 
     private void GetTouch()
@@ -113,5 +113,10 @@ public class PlayerMovement : UnitMovement
         _touchVelocity = new Vector3(xMove, 0f, zMove);
         _touchVelocity.Normalize();
         _touching = true;
+    }
+
+    private bool IsUnitInCombat()
+    {
+        return Unit.Combat.Targets.Count > 0;
     }
 }
