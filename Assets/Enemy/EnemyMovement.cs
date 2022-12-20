@@ -12,7 +12,7 @@ public class EnemyMovement : UnitMovement
 
     public override void InitMovement()
     {
-        if (!UnitInCombat())
+        if (!IsUnitInCombat())
         {
             base.InitMovement();
         }
@@ -24,7 +24,7 @@ public class EnemyMovement : UnitMovement
         Unit.Rigidbody.angularVelocity = Vector3.zero;
         Unit.Animator.SetBool(Constants.AnimRunningParam, false);
 
-        if (!DestinationReached && !UnitInCombat())
+        if (!DestinationReached && !IsUnitInCombat())
         {
             UnitStuckCoroutine = StartCoroutine(CheckUnitStuck());
         }
@@ -34,7 +34,7 @@ public class EnemyMovement : UnitMovement
 
     public override void StartMovement()
     {
-        if (!DestinationReached && PathToDestination.Count != 0 && !UnitInCombat())
+        if (!DestinationReached && PathToDestination.Count != 0 && !IsUnitInCombat())
         {
             if (UnitStuckCoroutine != null)
             {
@@ -48,14 +48,14 @@ public class EnemyMovement : UnitMovement
 
     protected override void Rotate()
     {
-        if (RotationNotAllowed())
+        if (IsRotationAllowed())
         {
             return;
         }
 
         Quaternion directionQ = Unit.transform.rotation;
 
-        if (UnitInCombat())
+        if (IsUnitInCombat())
         {
             Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
             directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
@@ -68,9 +68,9 @@ public class EnemyMovement : UnitMovement
         Unit.Rigidbody.MoveRotation(directionQ);
     }
 
-    protected override bool RotationNotAllowed()
+    protected override bool IsRotationAllowed()
     {
-        return !MovingToDestination && !UnitInCombat();
+        return !MovingToDestination && !IsUnitInCombat();
     }
 
     protected override Vector3 GetDestination()
@@ -78,15 +78,7 @@ public class EnemyMovement : UnitMovement
         return ActionManager.Instance.GetEnemyActionDestination(Unit);
     }
 
-    private void TargetDied(IDamageable target)
-    {
-        if (!UnitInCombat())
-        {
-            InitMovement();
-        }
-    }
-
-    private bool UnitInCombat()
+    private bool IsUnitInCombat()
     {
         return Unit.Combat.Targets.Count > 0;
     }

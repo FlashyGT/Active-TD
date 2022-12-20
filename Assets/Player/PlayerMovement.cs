@@ -53,7 +53,7 @@ public class PlayerMovement : UnitMovement
 
     protected override void Rotate()
     {
-        if (RotationNotAllowed())
+        if (!IsRotationAllowed())
         {
             return;
         }
@@ -73,9 +73,9 @@ public class PlayerMovement : UnitMovement
         Unit.Rigidbody.MoveRotation(directionQ);
     }
 
-    protected override bool RotationNotAllowed()
+    protected override bool IsRotationAllowed()
     {
-        return !_touching && Unit.Combat.Targets.Count == 0;
+        return _touching || Unit.Combat.Targets.Count > 0;
     }
 
     private void GetTouch()

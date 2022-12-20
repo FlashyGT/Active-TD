@@ -61,25 +61,31 @@ public class Pathfinding : MonoBehaviour
     private Vector3 _targetPos;
 
     private float _unitRadius = 0.3f;
-    private float _moveThreshold = 1f;
+    private LayerMask _layerMask;
 
-    public List<Vector3> GetPath(Vector3 startPos, Vector3 targetPos)
+    private const float MinMoveThreshold = 0.25f;
+    private const float MaxMoveThreshold = 0.5f;
+
+    public Queue<Vector3> GetPath(Vector3 startPos, Vector3 targetPos)
     {
-        return GetPath(startPos, targetPos, _unitRadius);
+        return GetPath(startPos, targetPos, _unitRadius, GetDefaultLayerMask());
     }
 
-    public List<Vector3> GetPath(Vector3 startPos, Vector3 targetPos, float unitRadius)
+    public Queue<Vector3> GetPath(Vector3 startPos, Vector3 targetPos, int layerMask)
     {
-        List<Vector3> path = new();
+        return GetPath(startPos, targetPos, _unitRadius, layerMask);
+    }
 
-        if (startPos == targetPos)
+    public Queue<Vector3> GetPath(Vector3 startPos, Vector3 targetPos, float unitRadius, int layerMask)
+    {
+        Queue<Vector3> path = new();
+
+        if (startPos == targetPos || Vector3.Distance(startPos, targetPos) < MinMoveThreshold)
         {
             return path;
         }
 
-        _unitRadius = unitRadius;
-        ResetPath();
-
+        InitValues(unitRadius, layerMask);
 
         PathNode endNode = CalculatePath(startPos, targetPos);
         if (endNode != null)
@@ -87,13 +93,13 @@ public class Pathfinding : MonoBehaviour
             PathNode currNode = endNode;
             while (currNode.Parent != null)
             {
-                Debug.DrawLine(currNode.Position, currNode.Parent.Position, Color.blue, 10f); // TODO: Remove
-                path.Add(currNode.Position);
+                //Debug.DrawLine(currNode.Position, currNode.Parent.Position, Color.blue, 10f); // TODO: Remove
+                path.Enqueue(currNode.Position);
                 currNode = currNode.Parent;
             }
 
-            path.Reverse();
-            path.RemoveAt(0); // Remove start node, because that is the units current position    
+            path = new Queue<Vector3>(path.Reverse());
+            path.Dequeue(); // Remove start node, because that is the units current position    
         }
 
         return path;
@@ -111,14 +117,14 @@ public class Pathfinding : MonoBehaviour
             _openNodes.Remove(_currentNode);
             _closedNodes.Add(_currentNode);
             SearchForNeighbours(_currentNode);
-        } while (!ReachedTargetPosition() && _openNodes.Count > 0);
+        } while (!HasReachedTargetPosition() && _openNodes.Count > 0);
 
         return GetEndNode();
     }
 
-    private bool ReachedTargetPosition()
+    private bool HasReachedTargetPosition()
     {
-        return Vector3.Distance(_targetPos, _currentNode.Position) < _moveThreshold;
+        return Vector3.Distance(_targetPos, _currentNode.Position) < MaxMoveThreshold;
     }
 
     private PathNode GetCurrentNode()
@@ -129,16 +135,15 @@ public class Pathfinding : MonoBehaviour
 
     private void SearchForNeighbours(PathNode parent)
     {
-        int layerMask = GetLayerMask();
         List<Vector3> directions = GetDirections();
 
         foreach (Vector3 direction in directions)
         {
-            if (!Physics.SphereCast(parent.Position, _unitRadius, direction, out _, direction.magnitude, layerMask))
+            if (!Physics.SphereCast(parent.Position, _unitRadius, direction, out _, direction.magnitude, _layerMask))
             {
                 Vector3 nodePosition = parent.Position + direction;
 
-                if (NodeIsClosed(nodePosition) ||
+                if (IsNodeClosed(nodePosition) ||
                     parent.Parent != null && Vector3.Dot(parent.Position - parent.Parent.Position, direction) == 0)
                     // 0 means that vectors are perpendicular
                 {
@@ -158,12 +163,12 @@ public class Pathfinding : MonoBehaviour
 
     private PathNode GetEndNode()
     {
-        if (!ReachedTargetPosition())
+        if (!HasReachedTargetPosition())
         {
             return null;
         }
 
-        if (Vector3.Distance(_currentNode.Position, _targetPos) > _moveThreshold / 4)
+        if (Vector3.Distance(_currentNode.Position, _targetPos) > MinMoveThreshold)
         {
             return CreateNode(_targetPos, _currentNode);
         }
@@ -171,7 +176,7 @@ public class Pathfinding : MonoBehaviour
         return _currentNode;
     }
 
-    private int GetLayerMask()
+    private int GetDefaultLayerMask()
     {
         string[] layers =
         {
@@ -198,13 +203,13 @@ public class Pathfinding : MonoBehaviour
 
         for (int i = 0; i < directions.Count; i++)
         {
-            directions[i] *= _moveThreshold;
+            directions[i] *= MaxMoveThreshold;
         }
 
         return directions;
     }
 
-    private bool NodeIsClosed(Vector3 nodePosition)
+    private bool IsNodeClosed(Vector3 nodePosition)
     {
         for (int x = 0; x < _closedNodes.Count; x++)
         {
@@ -245,8 +250,10 @@ public class Pathfinding : MonoBehaviour
         );
     }
 
-    private void ResetPath()
+    private void InitValues(float unitRadius, int layerMask)
     {
+        _unitRadius = unitRadius;
+        _layerMask = layerMask;
         _openNodes.Clear();
         _closedNodes.Clear();
     }

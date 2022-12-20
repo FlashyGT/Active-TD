@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -50,6 +51,15 @@ public class GameManager : MonoBehaviour
         {
             objectHealth.Health = objectHealth.MaxHealth;
         }
+    }
+
+    #endregion
+
+    #region Utility
+
+    public Queue<T> RemoveItemFromQueue<T>(T item, Queue<T> queue)
+    {
+        return new Queue<T>(queue.Where(x => !Equals(x, item)));
     }
 
     #endregion

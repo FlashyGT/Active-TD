@@ -4,19 +4,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Garden : MonoBehaviour, IDamageable
+public class Garden : MonoBehaviour, IDamageable, IUnitAction
 {
     public ObjectHealth ObjectHealth { get; set; }
-
+    public event Action<IUnitAction> OnUnitActionRequired;
+    public event Action OnUnitActionFinished;
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
 
+    [SerializeField] private UnitActionManager unitActionManager;
     [SerializeField] private GardenSO gardenSo;
     [SerializeField] private List<GameObject> gardenStages;
-    [SerializeField] private float timeBetweenStages = 5f;
 
-    private UnitActionManager _unitActionManager;
+    [SerializeField] private Farm farm;
+
     private int _currentGardenStage = 0;
 
     #region UnityMethods
@@ -24,13 +26,14 @@ public class Garden : MonoBehaviour, IDamageable
     private void Awake()
     {
         ObjectHealth = new ObjectHealth(gardenSo.health, gardenSo.health);
-        _unitActionManager = GetComponent<UnitActionManager>();
+        farm.AddGarden(this);
     }
 
     private void Start()
     {
         StartCoroutine(ActionLoop());
-        _unitActionManager.OnActionFinished += ChangeStage;
+        unitActionManager.OnActionFinished += ChangeStage;
+        OnUnitActionRequired += ActionManager.Instance.AssignUnitToAction;
     }
 
     #endregion
@@ -46,6 +49,8 @@ public class Garden : MonoBehaviour, IDamageable
     {
         OnObjDeath.Invoke();
         OnDeath?.Invoke(this);
+        ActionFinishedEvent();
+        ActionManager.Instance.RemoveAction(this);
     }
 
     public GameObject GetGameObject()
@@ -60,6 +65,38 @@ public class Garden : MonoBehaviour, IDamageable
 
     #endregion
 
+    #region IUnitAction
+
+    public Queue<Vector3> GetUnitDestinations()
+    {
+        Queue<Vector3> destinations = new();
+
+        if (!HasReachedHarvestStage())
+        {
+            destinations.Enqueue(farm.WellLocation);
+        }
+
+        destinations.Enqueue(GetUAMLocation());
+        return destinations;
+    }
+
+    public UnitType GetUnitType()
+    {
+        return UnitType.Gardener;
+    }
+
+    public Vector3 GetUAMLocation()
+    {
+        return unitActionManager.transform.position;
+    }
+
+    #endregion
+
+    private bool HasReachedHarvestStage()
+    {
+        return _currentGardenStage == gardenStages.Count - 1;
+    }
+
     private void ChangeStage()
     {
         gardenStages[_currentGardenStage].SetActive(false);
@@ -70,7 +107,7 @@ public class Garden : MonoBehaviour, IDamageable
 
     private void ChangeStageIndex()
     {
-        if (ReachedFinalStage())
+        if (HasReachedHarvestStage())
         {
             _currentGardenStage = 0;
         }
@@ -82,24 +119,28 @@ public class Garden : MonoBehaviour, IDamageable
 
     private void StartAction()
     {
-        if (ReachedFinalStage())
+        if (HasReachedHarvestStage())
         {
-            _unitActionManager.SetUnitAction(UnitActionType.Pickup, UnitActionItem.Empty);
+            unitActionManager.SetUnitAction(UnitActionType.Pickup, UnitActionItem.Empty);
         }
         else
         {
-            _unitActionManager.SetUnitAction(UnitActionType.Delivery, UnitActionItem.Water);
+            unitActionManager.SetUnitAction(UnitActionType.Delivery, UnitActionItem.Water);
         }
-    }
 
-    private bool ReachedFinalStage()
-    {
-        return _currentGardenStage == gardenStages.Count - 1;
+        OnUnitActionRequired?.Invoke(this);
     }
 
     private IEnumerator ActionLoop()
     {
-        yield return new WaitForSeconds(timeBetweenStages);
+        ActionFinishedEvent();
+        yield return new WaitForSeconds(gardenSo.timeBetweenStages);
         StartAction();
+    }
+
+    private void ActionFinishedEvent()
+    {
+        OnUnitActionFinished?.Invoke();
+        OnUnitActionFinished = null;
     }
 }

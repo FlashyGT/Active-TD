@@ -36,7 +36,7 @@ public class UnitActionManager : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (_unitsInAction.Count != 0)
+        if (HasUnitsInAction())
         {
             _timeInAction += Time.deltaTime;
             fillerImage.fillAmount = _timeInAction / _currentAction.SecondsToComplete;
@@ -57,7 +57,13 @@ public class UnitActionManager : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        ResetFiller();
+        Unit unit = other.GetComponentInParent<Unit>();
+        _unitsInAction.Remove(unit);
+
+        if (!HasUnitsInAction())
+        {
+            ResetFiller();
+        }
     }
 
     #endregion
@@ -100,16 +106,17 @@ public class UnitActionManager : MonoBehaviour
         actionUIElement.SetActive(true);
     }
 
-    private bool UnitIsValidForAction(Unit unit)
+    private bool IsUnitValidForAction(Unit unit)
     {
-        return unit.CarryingItem == _itemBeforeAction;
+        return unit.Action.Item == _itemBeforeAction;
     }
 
     private void ActionFinished()
     {
         foreach (Unit unit in _unitsInAction)
         {
-            unit.CarryingItem = _itemAfterAction;
+            unit.Action.Item = _itemAfterAction;
+            unit.Action.OnActionFinished?.Invoke();
         }
 
         _unitsInAction.Clear();
@@ -117,14 +124,13 @@ public class UnitActionManager : MonoBehaviour
         if (!_onlyOneUnitAction)
         {
             actionUIElement.SetActive(false);
+            OnActionFinished?.Invoke();
         }
-
-        OnActionFinished?.Invoke();
     }
 
     private void AddUnitToAction(Unit unit)
     {
-        if (UnitIsValidForAction(unit))
+        if (IsUnitValidForAction(unit) && _currentAction != null)
         {
             _unitsInAction.Add(unit);
         }
@@ -134,5 +140,10 @@ public class UnitActionManager : MonoBehaviour
     {
         _timeInAction = 0;
         fillerImage.fillAmount = _timeInAction;
+    }
+
+    private bool HasUnitsInAction()
+    {
+        return _unitsInAction.Count != 0;
     }
 }

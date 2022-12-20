@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Garden_1
   m_EditorClassIdentifier: 
   health: 30
+  timeBetweenStages: 5

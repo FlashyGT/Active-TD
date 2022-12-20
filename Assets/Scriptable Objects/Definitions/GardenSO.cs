@@ -6,4 +6,5 @@ using UnityEngine;
 public class GardenSO : ScriptableObject
 {
     public int health;
+    public float timeBetweenStages;
 }

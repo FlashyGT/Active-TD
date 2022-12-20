@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -19,10 +20,9 @@ public class UnitMovement : MonoBehaviour
     protected Coroutine UnitStuckCoroutine;
 
     [SerializeField] protected float pathNodeDistanceThreshold = 0.5f;
-    protected List<Vector3> PathToDestination = new();
+    protected Queue<Vector3> PathToDestination = new();
 
     private Vector3 _pathNodePos;
-    private int _pathNodeIndex;
 
     #region UnityMethods
 
@@ -52,11 +52,11 @@ public class UnitMovement : MonoBehaviour
         GetUnit();
 
         Destination = GetDestination();
-        PathToDestination = Pathfinding.Instance.GetPath(Unit.transform.position, Destination);
+        PathToDestination = GetPath();
+
         if (PathToDestination.Count != 0)
         {
-            _pathNodeIndex = 0;
-            _pathNodePos = PathToDestination[_pathNodeIndex];
+            _pathNodePos = PathToDestination.Dequeue();
 
             Unit.Animator.SetBool(Constants.AnimRunningParam, true);
 
@@ -104,14 +104,13 @@ public class UnitMovement : MonoBehaviour
         if (distanceToNode < pathNodeDistanceThreshold)
         {
             // Reached last node
-            if (_pathNodeIndex == PathToDestination.Count - 1)
+            if (PathToDestination.Count == 0)
             {
                 ReachedTarget();
                 return;
             }
 
-            _pathNodeIndex++;
-            _pathNodePos = PathToDestination[_pathNodeIndex];
+            _pathNodePos = PathToDestination.Dequeue();
         }
 
         Vector3 direction = _pathNodePos - Unit.transform.position;
@@ -123,7 +122,7 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual void Rotate()
     {
-        if (RotationNotAllowed())
+        if (IsRotationAllowed())
         {
             return;
         }
@@ -138,7 +137,7 @@ public class UnitMovement : MonoBehaviour
         Unit.Rigidbody.MoveRotation(directionQ);
     }
 
-    protected virtual bool RotationNotAllowed()
+    protected virtual bool IsRotationAllowed()
     {
         return !MovingToDestination;
     }
@@ -146,6 +145,11 @@ public class UnitMovement : MonoBehaviour
     protected virtual Vector3 GetDestination()
     {
         throw new NotImplementedException();
+    }
+
+    protected virtual Queue<Vector3> GetPath()
+    {
+        return Pathfinding.Instance.GetPath(Unit.transform.position, Destination);
     }
 
     protected IEnumerator CheckUnitStuck()

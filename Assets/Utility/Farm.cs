@@ -6,45 +6,45 @@ using Random = UnityEngine.Random;
 
 public class Farm : MonoBehaviour, IUpgradeable
 {
-    [SerializeField] private List<Garden> gardens;
+    public Vector3 WellLocation { get; private set; }
+
+    private Queue<IDamageable> _gardens = new();
 
     #region UnityMethods
 
-    private void Start()
+    private void Awake()
     {
-        KeepTrackOfGardens();
+        WellLocation = ActionManager.Instance.Well.GetUAMLocation();
     }
 
     #endregion
+
+    public void AddGarden(Garden garden)
+    {
+        _gardens.Enqueue(garden);
+        garden.OnDeath += GardenDied;
+    }
+
+    public IDamageable GetGarden()
+    {
+        if (_gardens.Count == 0)
+        {
+            return null;
+        }
+
+        return _gardens.Peek();
+    }
 
     public void Upgrade()
     {
         throw new NotImplementedException();
     }
 
-    public Garden GetGarden()
+    private void GardenDied(IDamageable garden)
     {
-        if (gardens.Count == 0)
-        {
-            return null;
-        }
+        _gardens = GameManager.Instance.RemoveItemFromQueue(garden, _gardens);
 
-        return gardens[0];
-    }
-
-    private void KeepTrackOfGardens()
-    {
-        foreach (Garden garden in gardens)
-        {
-            garden.OnObjDeath.AddListener(GardenDied);
-        }
-    }
-
-    private void GardenDied()
-    {
-        gardens.RemoveAt(0);
-
-        if (gardens.Count == 0)
+        if (_gardens.Count == 0)
         {
             GameManager.Instance.GameLost();
         }
