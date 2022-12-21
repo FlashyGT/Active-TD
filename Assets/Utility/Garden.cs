@@ -12,6 +12,7 @@ public class Garden : MonoBehaviour, IDamageable, IUnitAction
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
+    [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
     [SerializeField] private UnitActionManager unitActionManager;
     [SerializeField] private GardenSO gardenSo;

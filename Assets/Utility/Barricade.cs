@@ -10,6 +10,7 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
+    [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
     [SerializeField] private BarricadeSO barricadeSo;
 

@@ -15,6 +15,7 @@ public class Unit : MonoBehaviour, IDamageable
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
+    [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
     [SerializeField] private UnitSO unitSo;
 
@@ -39,6 +40,7 @@ public class Unit : MonoBehaviour, IDamageable
     {
         Animator.SetTrigger(Constants.AnimDeathParam);
         OnObjDeath.Invoke();
+        OnObjDeath.RemoveAllListeners();
         OnDeath?.Invoke(this);
     }
 
@@ -56,6 +58,8 @@ public class Unit : MonoBehaviour, IDamageable
 
     public void InitUnit()
     {
+        ObjectHealth.ResetHealth();
+        OnObjRespawn.Invoke();
         Movement.InitMovement();
     }
 }

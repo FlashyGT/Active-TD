@@ -12,6 +12,7 @@ public interface IDamageable
 
     // Used for this specific unit to manage components and callbacks for external scripts
     public UnityEvent OnObjDeath { get; set; }
+    public UnityEvent OnObjRespawn { get; set; }
 
     public void OnDamageTake();
 

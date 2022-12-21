@@ -20,4 +20,10 @@ public class UnitAnimationEvents : MonoBehaviour
     {
         _unit.Combat.DealDamageToTargets();
     }
+
+    protected void UnitDead()
+    {
+        _unit.transform.parent.gameObject.SetActive(false);
+        transform.localPosition = Vector3.zero;
+    }
 }

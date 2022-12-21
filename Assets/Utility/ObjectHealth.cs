@@ -14,6 +14,11 @@ public class ObjectHealth
         MaxHealth = maxHealth;
     }
 
+    public void ResetHealth()
+    {
+        Health = MaxHealth;
+    }
+
     public bool IsDead()
     {
         return Health <= 0;

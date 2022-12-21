@@ -8,9 +8,11 @@ public class ObjectPooler : MonoBehaviour
     public static ObjectPooler Instance { get; private set; }
 
     private Transform _poolParent;
-    private Dictionary<string, Transform> _poolObjectParents = new();
 
-    private Dictionary<GameObject, Queue<GameObject>> _pools = new();
+    private Dictionary<string, Transform> _poolObjectParents = new();
+    private Dictionary<GameObject, List<GameObject>> _pools = new();
+
+    private int _defaultPoolSize = 5;
 
     #region UnityMethods
 
@@ -30,21 +32,21 @@ public class ObjectPooler : MonoBehaviour
 
     #endregion
 
-    public List<GameObject> GetPool(GameObject poolObject, int amountOfObjects)
+    public GameObject GetObject(GameObject poolObject)
     {
         if (!_pools.ContainsKey(poolObject))
         {
-            CreatePool(poolObject, amountOfObjects);
+            CreatePool(poolObject, _defaultPoolSize);
         }
 
-        return GetObjects(poolObject, amountOfObjects);
+        return GetPoolObject(poolObject);
     }
 
     private void CreatePool(GameObject poolObject, int amountOfObjects)
     {
         CreatePoolObjectParent(poolObject);
 
-        Queue<GameObject> pool = new();
+        List<GameObject> pool = new();
         AddObjectsToPool(poolObject, pool, amountOfObjects);
 
         _pools.Add(poolObject, pool);
@@ -58,14 +60,9 @@ public class ObjectPooler : MonoBehaviour
         _poolObjectParents.Add(parentName, parent.transform);
     }
 
-    private void AddObjectsToPool(GameObject poolObject, Queue<GameObject> poolToAddTo, int amountOfObjects)
+    private void AddObjectsToPool(GameObject poolObject, List<GameObject> poolToAddTo, int amountOfObjects)
     {
-        Queue<GameObject> currPool = poolToAddTo;
-
-        if (currPool == null)
-        {
-            currPool = _pools[poolObject];
-        }
+        List<GameObject> currPool = poolToAddTo;
 
         Transform objectParent = _poolObjectParents[poolObject.name];
 
@@ -73,26 +70,27 @@ public class ObjectPooler : MonoBehaviour
         {
             GameObject currObject = Instantiate(poolObject, objectParent);
             currObject.SetActive(false);
-            currPool.Enqueue(currObject);
+            currPool.Add(currObject);
         }
     }
 
-    private List<GameObject> GetObjects(GameObject poolObject, int amountOfObjects)
+    private GameObject GetPoolObject(GameObject poolObject)
     {
-        List<GameObject> objects = new();
-        Queue<GameObject> objectPool = _pools[poolObject];
-        int amountOfObjectsInPool = objectPool.Count;
+        List<GameObject> objectPool = _pools[poolObject];
 
-        if (amountOfObjects > amountOfObjectsInPool)
+        int poolIndex;
+        for (poolIndex = 0; poolIndex < objectPool.Count; poolIndex++)
         {
-            AddObjectsToPool(poolObject, null, amountOfObjects - amountOfObjectsInPool);
+            GameObject currObj = objectPool[poolIndex];
+            if (!currObj.activeInHierarchy)
+            {
+                return currObj;
+            }
         }
 
-        for (int x = 0; x < amountOfObjects; x++)
-        {
-            objects.Add(objectPool.Dequeue());
-        }
+        AddObjectsToPool(poolObject, objectPool, _defaultPoolSize);
 
-        return objects;
+        // Get next object in pool that was just added
+        return objectPool[poolIndex + 1];
     }
 }

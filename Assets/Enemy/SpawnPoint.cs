@@ -7,7 +7,10 @@ public class SpawnPoint : MonoBehaviour
 {
     public Queue<GameObject> UnitsToSpawn { get; private set; }
 
+    [SerializeField] private int secondsBeforeNextUnit = 1;
+
     private EnemySpawner _enemySpawner;
+    private ObjectPooler _objectPooler;
 
     private void Awake()
     {
@@ -17,34 +20,41 @@ public class SpawnPoint : MonoBehaviour
         _enemySpawner.OnWaveGenerated += StartSpawning;
     }
 
-    private void StartSpawning()
+    private void Start()
     {
-        SpawnUnit();
+        _objectPooler = ObjectPooler.Instance;
     }
 
-    private void SpawnUnit()
+    private void StartSpawning()
+    {
+        StartCoroutine(SpawnUnit());
+    }
+
+    private IEnumerator SpawnUnit()
     {
         if (UnitsToSpawn.Count == 0)
         {
-            return;
+            yield break;
         }
 
-        GameObject unitGo = UnitsToSpawn.Dequeue();
+        yield return new WaitForSeconds(secondsBeforeNextUnit);
+
+        GameObject unitGo = _objectPooler.GetObject(UnitsToSpawn.Dequeue());
         Unit unit = unitGo.GetComponentInDirectChildren<Unit>(true); // TODO: optimize
 
-        unitGo.transform.position = transform.position;
         unitGo.SetActive(true);
-        unit.OnObjDeath.AddListener(RemoveActiveUnit);
+        unit.transform.position = transform.position;
+        unit.OnObjDeath.AddListener(RemoveUnitInWave);
         unit.InitUnit();
     }
 
-    private void RemoveActiveUnit()
+    private void RemoveUnitInWave()
     {
         _enemySpawner.AmountOfUnitsInWave--;
     }
 
     private void OnTriggerExit(Collider other)
     {
-        SpawnUnit();
+        StartCoroutine(SpawnUnit());
     }
 }

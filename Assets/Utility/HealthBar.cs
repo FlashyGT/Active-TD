@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,20 +20,15 @@ public class HealthBar : MonoBehaviour
     {
         _obj = objWithIDamageable.GetComponent<IDamageable>();
         _obj.OnDamageTaken += UpdateHealthBar;
+        _obj.OnObjRespawn.AddListener(ResetHealthBar);
         _maxHealth = _obj.ObjectHealth.MaxHealth;
     }
 
     #endregion
 
-    private void ChangeFillAmount()
+    private void ResetHealthBar()
     {
-        fillBar.fillAmount = _health / _maxHealth;
-    }
-
-    private void ChangeColor()
-    {
-        Color healthColor = Color.Lerp(Color.red, Color.green, (_health / _maxHealth));
-        fillBar.color = healthColor;
+        container.SetActive(false);
     }
 
     private void UpdateHealthBar()
@@ -45,5 +41,16 @@ public class HealthBar : MonoBehaviour
         _health = _obj.ObjectHealth.Health;
         ChangeFillAmount();
         ChangeColor();
+    }
+
+    private void ChangeFillAmount()
+    {
+        fillBar.fillAmount = _health / _maxHealth;
+    }
+
+    private void ChangeColor()
+    {
+        Color healthColor = Color.Lerp(Color.red, Color.green, (_health / _maxHealth));
+        fillBar.color = healthColor;
     }
 }

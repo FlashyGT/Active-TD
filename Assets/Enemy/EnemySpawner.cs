@@ -24,7 +24,7 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private List<SpawnPoint> spawnPoints = new();
     [SerializeField] private List<WaveSO> waves = new();
-    [SerializeField] [Range(5f, 60f)] private float timeBetweenWaves = 30f; // night time duration
+    [SerializeField] [Range(10f, 60f)] private float timeBetweenWaves = 30f; // night time duration
 
     private int _currentWave = 0;
     private int _amountOfUnitsInWave;
@@ -44,18 +44,17 @@ public class EnemySpawner : MonoBehaviour
 
         foreach (WaveObject waveObject in wave.WaveObjects)
         {
-            List<GameObject> enemies = ObjectPooler.Instance.GetPool(waveObject.Prefab, waveObject.AmountOfUnits);
-
-            AddEnemiesToSpawnPoints(waveObject.SpawnLoc, enemies);
+            AddEnemiesToSpawnPoints(waveObject.SpawnLoc, waveObject.Prefab, waveObject.AmountOfUnits);
         }
 
         OnWaveGenerated?.Invoke();
     }
 
-    private void AddEnemiesToSpawnPoints(SpawnLocation defaultSpawnLoc, List<GameObject> enemies)
+    private void AddEnemiesToSpawnPoints(SpawnLocation defaultSpawnLoc, GameObject enemy, int amount)
     {
         SpawnPoint spawnPoint = GetSpawnPoint(defaultSpawnLoc);
-        foreach (GameObject enemy in enemies)
+
+        for (int x = 0; x < amount; x++)
         {
             if (defaultSpawnLoc == SpawnLocation.Random)
             {
