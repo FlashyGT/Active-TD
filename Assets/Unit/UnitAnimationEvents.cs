@@ -18,7 +18,7 @@ public class UnitAnimationEvents : MonoBehaviour
 
     protected void DealDamage()
     {
-        _unit.Combat.DealDamageToTargets();
+        _unit.Combat.DealDamage();
     }
 
     protected void UnitDead()

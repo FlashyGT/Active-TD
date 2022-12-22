@@ -12,23 +12,26 @@ public class UnitCombat : MonoBehaviour
     public event Action OnCombatStarted;
     public event Action OnCombatEnded;
 
-    public List<IDamageable> Targets { get; private set; }
+    public int TargetCount => _targets.Count;
+    public IDamageable CurrentTarget => _targets[0];
 
     protected Unit Unit;
 
     [SerializeField] private WeaponSO weaponSo;
 
+    private List<IDamageable> _targets;
+
     #region UnityMethods
 
     private void Awake()
     {
-        Targets = new List<IDamageable>();
+        _targets = new List<IDamageable>();
     }
 
     private void Start()
     {
         Unit = GetComponentInParent<Unit>();
-        Unit.OnObjRespawn.AddListener(Targets.Clear);
+        Unit.OnObjRespawn.AddListener(_targets.Clear);
         HasFinishedLoading = true;
     }
 
@@ -46,12 +49,12 @@ public class UnitCombat : MonoBehaviour
 
     #endregion
 
-    public void DealDamageToTargets()
+    public virtual void DealDamage()
     {
         // ToList() copies the existing list, so when damage gets dealt and a unit dies
         // we don't modify the actual _targets list, but instead a copy of it.
         // If we modify _targets directly we receive: InvalidOperationException
-        foreach (IDamageable obj in Targets.ToList())
+        foreach (IDamageable obj in _targets.ToList())
         {
             GameManager.Instance.DamageObject(obj, weaponSo.damage);
         }
@@ -59,10 +62,10 @@ public class UnitCombat : MonoBehaviour
 
     private void AddTarget(IDamageable obj)
     {
-        Targets.Add(obj);
+        _targets.Add(obj);
         obj.OnDeath += RemoveTarget;
 
-        if (Targets.Count == 1)
+        if (TargetCount == 1)
         {
             OnCombatStarted?.Invoke();
             Unit.Animator.SetBool(Constants.AnimAttackParam, true);
@@ -71,9 +74,9 @@ public class UnitCombat : MonoBehaviour
 
     private void RemoveTarget(IDamageable obj)
     {
-        Targets.Remove(obj);
+        _targets.Remove(obj);
 
-        if (Targets.Count == 0)
+        if (TargetCount == 0)
         {
             OnCombatEnded?.Invoke();
             Unit.Animator.SetBool(Constants.AnimAttackParam, false);

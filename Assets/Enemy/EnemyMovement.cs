@@ -62,7 +62,7 @@ public class EnemyMovement : UnitMovement
 
         if (IsUnitInCombat())
         {
-            Vector3 targetPos = Unit.Combat.Targets[0].GetGameObject().transform.position;
+            Vector3 targetPos = Unit.Combat.CurrentTarget.GetGameObject().transform.position;
             directionQ = Quaternion.LookRotation(targetPos - Unit.transform.position);
         }
         else if (Unit.Rigidbody.velocity != Vector3.zero)
@@ -85,6 +85,6 @@ public class EnemyMovement : UnitMovement
 
     private bool IsUnitInCombat()
     {
-        return Unit.Combat.Targets.Count > 0;
+        return Unit.Combat.TargetCount > 0;
     }
 }
