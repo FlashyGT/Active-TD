@@ -8,9 +8,9 @@ public class EnemyMovement : UnitMovement
 
     protected override void Start()
     {
+        base.Start();
         Unit.Combat.OnCombatStarted += StopMovement;
         Unit.Combat.OnCombatEnded += StartMovement;
-        base.Start();
     }
 
     #endregion

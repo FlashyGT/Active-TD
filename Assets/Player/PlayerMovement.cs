@@ -14,6 +14,7 @@ public class PlayerMovement : UnitMovement
 
     protected override void Start()
     {
+        Unit = GetComponentInParent<Unit>();
     }
 
     protected override void Update()
