@@ -11,16 +11,10 @@ public class UnitCollisionBlocker : MonoBehaviour
 
     #region UnityMethods
 
-    private void Awake()
-    {
-        _unit = GetComponentInParent<Unit>();
-        _unitCollisionBlocker = GetComponent<CapsuleCollider>();
-
-        Physics.IgnoreCollision(unitCollider, _unitCollisionBlocker, true);
-    }
-
     private void Start()
     {
+        IgnoreSelfCollision();
+
         _layerMask = LayerMask.GetMask(Constants.LayerUnitCollisionBlocker);
     }
 
@@ -35,5 +29,13 @@ public class UnitCollisionBlocker : MonoBehaviour
         {
             _unit.Movement.StopMovement();
         }
+    }
+
+    private void IgnoreSelfCollision()
+    {
+        _unit = GetComponentInParent<Unit>();
+        _unitCollisionBlocker = GetComponent<CapsuleCollider>();
+
+        Physics.IgnoreCollision(unitCollider, _unitCollisionBlocker, true);
     }
 }

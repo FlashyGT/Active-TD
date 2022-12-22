@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -24,7 +25,12 @@ public class Unit : MonoBehaviour, IDamageable
     private void Awake()
     {
         ObjectHealth = new ObjectHealth(unitSo.health, unitSo.health);
+    }
+
+    private void Start()
+    {
         Rigidbody = GetComponent<Rigidbody>();
+        OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
     }
 
     #endregion
@@ -58,8 +64,18 @@ public class Unit : MonoBehaviour, IDamageable
 
     public void InitUnit()
     {
-        ObjectHealth.ResetHealth();
+        StartCoroutine(InitializeUnit());
+    }
+
+    private IEnumerator InitializeUnit()
+    {
+        // Waiting for components to get loaded...
+        yield return new WaitUntil(ComponentsLoaded);
         OnObjRespawn.Invoke();
-        Movement.InitMovement();
+    }
+
+    private bool ComponentsLoaded()
+    {
+        return Movement.HasFinishedLoading && Combat.HasFinishedLoading;
     }
 }

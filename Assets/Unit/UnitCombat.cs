@@ -6,6 +6,9 @@ using UnityEngine;
 
 public class UnitCombat : MonoBehaviour
 {
+    // Set to true after Start() has finished
+    public bool HasFinishedLoading { get; private set; }
+
     public event Action OnCombatStarted;
     public event Action OnCombatEnded;
 
@@ -19,8 +22,14 @@ public class UnitCombat : MonoBehaviour
 
     private void Awake()
     {
-        Unit = GetComponentInParent<Unit>();
         Targets = new List<IDamageable>();
+    }
+
+    private void Start()
+    {
+        Unit = GetComponentInParent<Unit>();
+        Unit.OnObjRespawn.AddListener(Targets.Clear);
+        HasFinishedLoading = true;
     }
 
     private void OnTriggerEnter(Collider coll)

@@ -8,6 +8,9 @@ using Random = UnityEngine.Random;
 
 public class UnitMovement : MonoBehaviour
 {
+    // Set to true after Start() has finished
+    public bool HasFinishedLoading { get; private set; }
+
     public Vector3 Destination { get; private set; }
 
     [SerializeField] [Range(0f, 1000f)] protected float speed = 250f;
@@ -26,13 +29,11 @@ public class UnitMovement : MonoBehaviour
 
     #region UnityMethods
 
-    private void Awake()
-    {
-        GetUnit();
-    }
-
     protected virtual void Start()
     {
+        Unit = GetComponentInParent<Unit>();
+        Unit.OnObjRespawn.AddListener(InitMovement);
+        HasFinishedLoading = true;
     }
 
     protected virtual void Update()
@@ -49,8 +50,6 @@ public class UnitMovement : MonoBehaviour
 
     public virtual void InitMovement()
     {
-        GetUnit();
-
         Destination = GetDestination();
         PathToDestination = GetPath();
 
@@ -167,13 +166,5 @@ public class UnitMovement : MonoBehaviour
         DestinationReached = true;
         StopMovement();
         InitMovement();
-    }
-
-    private void GetUnit() // TODO: optimize
-    {
-        if (Unit == null)
-        {
-            Unit = GetComponentInParent<Unit>();
-        }
     }
 }

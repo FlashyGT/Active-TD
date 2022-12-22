@@ -18,15 +18,12 @@ public class UnitAction : MonoBehaviour
 
     #region UnityMethods
 
-    private void Awake()
-    {
-        _unit = GetComponentInParent<Unit>();
-    }
-
     private void Start()
     {
         if (!isPlayer)
         {
+            _unit = GetComponentInParent<Unit>();
+
             _unitBaseLocation = _unit.transform.position;
             OnActionFinished += ChangeDestination;
             ActionManager.Instance.UnitIsAvailable(Type, _unit);

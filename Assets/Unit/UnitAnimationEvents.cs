@@ -9,7 +9,7 @@ public class UnitAnimationEvents : MonoBehaviour
 
     #region UnityMethods
 
-    private void Awake()
+    private void Start()
     {
         _unit = GetComponentInParent<Unit>();
     }

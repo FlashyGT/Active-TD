@@ -15,13 +15,12 @@ public class SpawnPoint : MonoBehaviour
     private void Awake()
     {
         UnitsToSpawn = new Queue<GameObject>();
-
-        _enemySpawner = GetComponentInParent<EnemySpawner>();
-        _enemySpawner.OnWaveGenerated += StartSpawning;
     }
 
     private void Start()
     {
+        _enemySpawner = GetComponentInParent<EnemySpawner>();
+        _enemySpawner.OnWaveGenerated += StartSpawning;
         _objectPooler = ObjectPooler.Instance;
     }
 

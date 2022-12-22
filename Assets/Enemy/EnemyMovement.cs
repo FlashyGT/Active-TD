@@ -10,6 +10,7 @@ public class EnemyMovement : UnitMovement
     {
         Unit.Combat.OnCombatStarted += StopMovement;
         Unit.Combat.OnCombatEnded += StartMovement;
+        base.Start();
     }
 
     #endregion
