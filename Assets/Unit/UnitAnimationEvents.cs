@@ -26,4 +26,9 @@ public class UnitAnimationEvents : MonoBehaviour
         _unit.transform.parent.gameObject.SetActive(false);
         transform.localPosition = Vector3.zero;
     }
+
+    protected void Attack()
+    {
+        _unit.Combat.Attack();
+    }
 }

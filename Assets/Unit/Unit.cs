@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class Unit : MonoBehaviour, IDamageable
 {
-    public ObjectHealth ObjectHealth { get; set; }
     [field: SerializeField] public Animator Animator { get; private set; }
     public Rigidbody Rigidbody { get; private set; }
 
@@ -13,6 +12,7 @@ public class Unit : MonoBehaviour, IDamageable
     [field: SerializeField] public UnitMovement Movement { get; private set; }
     [field: SerializeField] public UnitAction Action { get; private set; }
 
+    public ObjectHealth ObjectHealth { get; set; }
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
@@ -57,7 +57,15 @@ public class Unit : MonoBehaviour, IDamageable
 
     public Vector3 GetAttackPoint()
     {
-        return transform.position;
+        Vector3 attackPoint = transform.position + Vector3.up;
+        
+        // Moving
+        if (Rigidbody.velocity != Vector3.zero)
+        {
+            attackPoint += Rigidbody.velocity;
+        }
+        
+        return attackPoint;
     }
 
     #endregion

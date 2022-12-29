@@ -17,19 +17,20 @@ public class UnitCombat : MonoBehaviour
 
     protected Unit Unit;
 
-    [SerializeField] private WeaponSO weaponSo;
+    [SerializeField] protected WeaponSO weaponSo;
 
     private List<IDamageable> _targets;
 
     #region UnityMethods
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _targets = new List<IDamageable>();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
+        InitSOValues();
         Unit = GetComponentInParent<Unit>();
         Unit.OnObjRespawn.AddListener(_targets.Clear);
         HasFinishedLoading = true;
@@ -58,6 +59,17 @@ public class UnitCombat : MonoBehaviour
         {
             GameManager.Instance.DamageObject(obj, weaponSo.damage);
         }
+    }
+
+    public virtual void Attack()
+    {
+        throw new NotImplementedException();
+    }
+
+    protected void InitSOValues()
+    {
+        SphereCollider combatCollider = GetComponent<SphereCollider>();
+        combatCollider.radius = weaponSo.range;
     }
 
     private void AddTarget(IDamageable obj)

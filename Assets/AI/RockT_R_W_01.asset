@@ -9,7 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 697085b14fdf3064690d19da70b59c6d, type: 3}
-  m_Name: Enemy_01
+  m_Script: {fileID: 11500000, guid: 3b90c3ba6fd3b304bb6d89f05898ad36, type: 3}
+  m_Name: RockT_R_W_01
   m_EditorClassIdentifier: 
-  health: 100
+  weaponType: 1
+  damage: 30
+  range: 30
+  fireRate: 0.5
+  projectile: {fileID: 2402444675694731286, guid: 0ec1a79a97854a64fb873dc2ad062281,
+    type: 3}
