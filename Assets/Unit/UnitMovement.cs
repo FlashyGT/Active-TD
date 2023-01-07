@@ -57,6 +57,11 @@ public class UnitMovement : MonoBehaviour
 
     public void RestartMovement()
     {
+        if (Unit.ObjectHealth.IsDead())
+        {
+            return;
+        }
+        
         StartCoroutine(InitMovementWithDelay());
     }
     

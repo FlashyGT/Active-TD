@@ -4,54 +4,6 @@ using UnityEngine;
 
 public class Pathfinding : MonoBehaviour
 {
-    public static Pathfinding Instance { get; private set; }
-
-    #region UnityMethods
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(this);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
-    #endregion
-
-    #region PathNode - Data structure
-
-    private class PathNode
-    {
-        public Vector3 Position { get; }
-        public float G { get; }
-        public float H { get; }
-        public PathNode Parent { get; }
-
-        public PathNode(Vector3 nodePos, float g, float h, PathNode nodeParent)
-        {
-            Position = nodePos;
-            G = g;
-            H = h;
-            Parent = nodeParent;
-        }
-
-        public float GetF()
-        {
-            return G + H;
-        }
-
-        public bool Equals(Vector3 position)
-        {
-            return Position == position;
-        }
-    }
-
-    #endregion
-
     private List<PathNode> _openNodes = new();
     private List<PathNode> _closedNodes = new();
 
@@ -63,8 +15,8 @@ public class Pathfinding : MonoBehaviour
     private float _unitRadius = 0.3f;
     private LayerMask _layerMask;
 
-    private const float MinMoveThreshold = 0.25f;
-    private const float MaxMoveThreshold = 0.5f;
+    private const float MinMoveThreshold = 0.5f;
+    private const float MaxMoveThreshold = 2f;
 
     public Queue<Vector3> GetPath(Vector3 startPos, Vector3 targetPos)
     {

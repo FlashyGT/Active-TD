@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,6 +10,34 @@ public class GameManager : MonoBehaviour
 
     [field: SerializeField] public Camera MainCamera { get; private set; }
     [field: SerializeField] public GameObject Player { get; private set; }
+
+    
+    public int FoodAmount {
+        get
+        {
+            return _foodAmount;
+        }
+        set
+        {
+            _foodAmount = value;
+            foodAmountUI.text = _foodAmount.ToString();
+        }
+    }
+    public int MoneyAmount {
+        get
+        {
+            return _moneyAmount;
+        }
+        set
+        {
+            _moneyAmount = value;
+            moneyAmountUI.text = _moneyAmount.ToString();
+        }
+    }
+    private int _foodAmount;
+    private int _moneyAmount;
+    [SerializeField] private TextMeshProUGUI foodAmountUI;
+    [SerializeField] private TextMeshProUGUI moneyAmountUI;
 
     #region UnityMethods
 

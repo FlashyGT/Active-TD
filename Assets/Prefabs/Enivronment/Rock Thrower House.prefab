@@ -116,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitLocations:
   - {x: -6, y: 2.8, z: 15}
-  - {x: 6, y: 2.8, z: 17}
+  - {x: 6, y: 2.8, z: 15}
   units:
   - {fileID: 7830618369178425642}
   - {fileID: 4893899437160246083}
@@ -258,6 +258,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 763fad76797132f499f2bfcdb4073325,
         type: 2}
+    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
+        type: 3}
+      propertyPath: definedActions.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5249622879638120132, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
       propertyPath: m_RootOrder

@@ -110,6 +110,7 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
         if (HasReachedHarvestStage())
         {
             _currentGardenStage = 0;
+            GameManager.Instance.FoodAmount++;
         }
         else
         {

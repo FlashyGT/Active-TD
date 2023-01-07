@@ -3075,7 +3075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 200
   maxMovementDelay: 1
-  pathNodeDistanceThreshold: 0.5
+  pathNodeDistanceThreshold: 0.25
 --- !u!114 &1290168771090056802
 MonoBehaviour:
   m_ObjectHideFlags: 0

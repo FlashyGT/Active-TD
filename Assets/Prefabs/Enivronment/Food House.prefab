@@ -95,6 +95,11 @@ PrefabInstance:
       objectReference: {fileID: 8978029809508519825}
     - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
+      propertyPath: uamType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
+        type: 3}
       propertyPath: fillerImage
       value: 
       objectReference: {fileID: 7236413412343783364}
@@ -103,28 +108,6 @@ PrefabInstance:
       propertyPath: actionUIElement
       value: 
       objectReference: {fileID: 3605965851157527685}
-    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
-        type: 3}
-      propertyPath: unitActions.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
-        type: 3}
-      propertyPath: definedActions.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
-        type: 3}
-      propertyPath: unitActions.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 67b5e7b21ff950141a433ea3b069d2e9,
-        type: 2}
-    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
-        type: 3}
-      propertyPath: definedActions.Array.data[0]
-      value: 
-      objectReference: {fileID: 11400000, guid: 67b5e7b21ff950141a433ea3b069d2e9,
-        type: 2}
     - target: {fileID: 5249622879638120132, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
       propertyPath: m_RootOrder
@@ -178,11 +161,6 @@ PrefabInstance:
     - target: {fileID: 5249622879638120132, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5490273065288648670, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
-        type: 3}
-      propertyPath: m_Center.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8560777373540287610, guid: 92d89e8b6890a4d46adfa598bdd31cf2,

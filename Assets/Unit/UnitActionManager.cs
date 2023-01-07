@@ -8,6 +8,8 @@ public class UnitActionManager : MonoBehaviour
 {
     public event Action OnActionFinished;
 
+    [SerializeField] private UAMType uamType;
+    
     [SerializeField] private GameObject actionGroundElement;
     [SerializeField] private GameObject actionUIElement;
     [SerializeField] private Image icon;
@@ -44,7 +46,7 @@ public class UnitActionManager : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (HasUnitsInAction())
+        if (HasUnitsInAction() && IsActionDoable())
         {
             _timeInAction += Time.deltaTime;
             fillerImage.fillAmount = _timeInAction / CurrentActionSo.SecondsToComplete;
@@ -78,6 +80,11 @@ public class UnitActionManager : MonoBehaviour
 
     public KeyValuePair<UnitActionType, UnitActionItem> GetCurrentAction()
     {
+        if (CurrentActionSo == null)
+        {
+            return default;
+        }
+        
         UnitActionSO currAction = CurrentActionSo;
         return new KeyValuePair<UnitActionType, UnitActionItem>(currAction.UnitActionType, currAction.UnitActionItem);
     }
@@ -169,6 +176,13 @@ public class UnitActionManager : MonoBehaviour
             ToggleActionElements();
             OnActionFinished?.Invoke();
         }
+        else
+        {
+            if (uamType == UAMType.Food)
+            {
+                GameManager.Instance.FoodAmount--;
+            }
+        }
     }
 
     private void AddUnitToAction(Unit unit)
@@ -189,4 +203,20 @@ public class UnitActionManager : MonoBehaviour
     {
         return _unitsInAction.Count != 0;
     }
+
+    private bool IsActionDoable()
+    {
+        if (uamType == UAMType.Food)
+        {
+            return GameManager.Instance.FoodAmount != 0;
+        }
+
+        return true;
+    }
+}
+
+public enum UAMType
+{
+    Universal,
+    Food
 }

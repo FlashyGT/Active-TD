@@ -131,11 +131,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95590d15883e1ed4a84183299d6c6730, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uamType: 0
   actionGroundElement: {fileID: 3770273668186282220}
   actionUIElement: {fileID: 0}
   icon: {fileID: 0}
   fillerImage: {fileID: 0}
-  unitActions: []
+  definedActions:
+  - {fileID: 11400000, guid: 67b5e7b21ff950141a433ea3b069d2e9, type: 2}
 --- !u!54 &7388185728454189229
 Rigidbody:
   m_ObjectHideFlags: 0
