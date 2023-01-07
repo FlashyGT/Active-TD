@@ -295,6 +295,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  <OnObjRespawn>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
   unitActionManager: {fileID: 567151971458460032}
   gardenSo: {fileID: 11400000, guid: 895ea52e30f0fb84987be2e1d61121f2, type: 2}
   gardenStages:
@@ -531,6 +534,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
+      propertyPath: definedActions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
+        type: 3}
       propertyPath: unitActions.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: 5b58b71040656f74a9323f4375203d9a,
@@ -538,6 +546,18 @@ PrefabInstance:
     - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
         type: 3}
       propertyPath: unitActions.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: dbe3f200008547c4d8fffe847639dbd5,
+        type: 2}
+    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
+        type: 3}
+      propertyPath: definedActions.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 5b58b71040656f74a9323f4375203d9a,
+        type: 2}
+    - target: {fileID: 1667396185867292629, guid: 92d89e8b6890a4d46adfa598bdd31cf2,
+        type: 3}
+      propertyPath: definedActions.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: dbe3f200008547c4d8fffe847639dbd5,
         type: 2}

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Garden : MonoBehaviour, IDamageable, IUnitAction
+public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
 {
     public ObjectHealth ObjectHealth { get; set; }
-    public event Action<IUnitAction> OnUnitActionRequired;
+    public event Action<IMultipleUnitAction> OnUnitActionRequired;
     public event Action OnUnitActionFinished;
     public event Action<IDamageable> OnDeath;
     public event Action OnDamageTaken;
@@ -26,14 +26,13 @@ public class Garden : MonoBehaviour, IDamageable, IUnitAction
 
     private void Awake()
     {
-        ObjectHealth = new ObjectHealth(gardenSo.health, gardenSo.health);
+        ObjectHealth = new ObjectHealth(gardenSo.Health, gardenSo.Health);
         farm.AddGarden(this);
     }
 
     private void Start()
     {
         StartCoroutine(ActionLoop());
-        unitActionManager.OnActionFinished += ChangeStage;
         OnUnitActionRequired += ActionManager.Instance.AssignUnitToAction;
     }
 
@@ -50,7 +49,7 @@ public class Garden : MonoBehaviour, IDamageable, IUnitAction
     {
         OnObjDeath.Invoke();
         OnDeath?.Invoke(this);
-        ActionFinishedEvent();
+        ResetAction();
         ActionManager.Instance.RemoveAction(this);
     }
 
@@ -66,7 +65,7 @@ public class Garden : MonoBehaviour, IDamageable, IUnitAction
 
     #endregion
 
-    #region IUnitAction
+    #region IMultipleUnitAction
 
     public Queue<Vector3> GetUnitDestinations()
     {
@@ -120,26 +119,36 @@ public class Garden : MonoBehaviour, IDamageable, IUnitAction
 
     private void StartAction()
     {
+        UnitActionType actionType;
+        UnitActionItem actionItem;
+        
         if (HasReachedHarvestStage())
         {
-            unitActionManager.SetUnitAction(UnitActionType.Pickup, UnitActionItem.Empty);
+            actionType = UnitActionType.Pickup;
+            actionItem = UnitActionItem.Empty;
         }
         else
         {
-            unitActionManager.SetUnitAction(UnitActionType.Delivery, UnitActionItem.Water);
+            actionType = UnitActionType.Delivery;
+            actionItem = UnitActionItem.Water;
         }
-
+        
+        
+        var action = new KeyValuePair<UnitActionType, UnitActionItem>(actionType, actionItem);
+        Action callback = ChangeStage;
+        unitActionManager.SetUnitAction(action, callback);
+        
         OnUnitActionRequired?.Invoke(this);
     }
 
     private IEnumerator ActionLoop()
     {
-        ActionFinishedEvent();
-        yield return new WaitForSeconds(gardenSo.timeBetweenStages);
+        ResetAction();
+        yield return new WaitForSeconds(gardenSo.TimeBetweenStages);
         StartAction();
     }
 
-    private void ActionFinishedEvent()
+    private void ResetAction()
     {
         OnUnitActionFinished?.Invoke();
         OnUnitActionFinished = null;

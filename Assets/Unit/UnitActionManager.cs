@@ -8,13 +8,19 @@ public class UnitActionManager : MonoBehaviour
 {
     public event Action OnActionFinished;
 
+    [SerializeField] private GameObject actionGroundElement;
     [SerializeField] private GameObject actionUIElement;
     [SerializeField] private Image icon;
     [SerializeField] private Image fillerImage;
 
-    [SerializeField] private List<UnitActionSO> unitActions = new();
+    [SerializeField] private List<UnitActionSO> definedActions = new();
 
-    private UnitActionSO _currentAction;
+    private Queue<KeyValuePair<UnitActionSO, Action>> _actionQueue = new();
+    
+    private KeyValuePair<UnitActionSO, Action> _currentAction;
+    private UnitActionSO CurrentActionSo => _currentAction.Key;
+    private Action CurrentActionCallback => _currentAction.Value;
+
     private readonly List<Unit> _unitsInAction = new();
     private float _timeInAction = 0f;
 
@@ -26,10 +32,12 @@ public class UnitActionManager : MonoBehaviour
 
     private void Start()
     {
-        _onlyOneUnitAction = unitActions.Count == 1;
+        OnActionFinished += StartNextActionInQueue;
+
+        _onlyOneUnitAction = definedActions.Count == 1;
         if (_onlyOneUnitAction)
         {
-            _currentAction = unitActions[0];
+            _currentAction = new KeyValuePair<UnitActionSO, Action>(definedActions[0], null);
             InitUnitAction();
         }
     }
@@ -39,9 +47,9 @@ public class UnitActionManager : MonoBehaviour
         if (HasUnitsInAction())
         {
             _timeInAction += Time.deltaTime;
-            fillerImage.fillAmount = _timeInAction / _currentAction.SecondsToComplete;
+            fillerImage.fillAmount = _timeInAction / CurrentActionSo.SecondsToComplete;
 
-            if (_timeInAction >= _currentAction.SecondsToComplete)
+            if (_timeInAction >= CurrentActionSo.SecondsToComplete)
             {
                 ResetFiller();
                 ActionFinished();
@@ -68,17 +76,42 @@ public class UnitActionManager : MonoBehaviour
 
     #endregion
 
-    public void SetUnitAction(UnitActionType type, UnitActionItem item)
+    public KeyValuePair<UnitActionType, UnitActionItem> GetCurrentAction()
     {
-        _currentAction = FindUnitAction(type, item);
-        InitUnitAction();
+        UnitActionSO currAction = CurrentActionSo;
+        return new KeyValuePair<UnitActionType, UnitActionItem>(currAction.UnitActionType, currAction.UnitActionItem);
+    }
+    
+    public void SetUnitAction(KeyValuePair<UnitActionType, UnitActionItem> action, Action callback)
+    {
+        UnitActionSO actionSO = FindUnitAction(action);
+        var currAction = new KeyValuePair<UnitActionSO, Action>(actionSO, callback);
+
+        if (CurrentActionSo == null)
+        {
+            _currentAction = currAction;
+            InitUnitAction();
+        }
+        else
+        {
+            _actionQueue.Enqueue(currAction);
+        }
     }
 
-    private UnitActionSO FindUnitAction(UnitActionType type, UnitActionItem item)
+    private void StartNextActionInQueue()
     {
-        foreach (UnitActionSO unitAction in unitActions)
+        if (_actionQueue.Count != 0)
         {
-            if (unitAction.UnitActionType == type && unitAction.UnitActionItem == item)
+            _currentAction = _actionQueue.Dequeue();
+            InitUnitAction();
+        }
+    }
+    
+    private UnitActionSO FindUnitAction(KeyValuePair<UnitActionType, UnitActionItem> action)
+    {
+        foreach (UnitActionSO unitAction in definedActions)
+        {
+            if (unitAction.UnitActionType == action.Key && unitAction.UnitActionItem == action.Value)
             {
                 return unitAction;
             }
@@ -89,26 +122,33 @@ public class UnitActionManager : MonoBehaviour
 
     private void InitUnitAction()
     {
-        icon.sprite = _currentAction.Icon;
+        icon.sprite = CurrentActionSo.Icon;
 
-        switch (_currentAction.UnitActionType)
+        switch (CurrentActionSo.UnitActionType)
         {
             case UnitActionType.Pickup:
                 _itemBeforeAction = UnitActionItem.Empty;
-                _itemAfterAction = _currentAction.UnitActionItem;
+                _itemAfterAction = CurrentActionSo.UnitActionItem;
                 break;
             case UnitActionType.Delivery:
-                _itemBeforeAction = _currentAction.UnitActionItem;
+                _itemBeforeAction = CurrentActionSo.UnitActionItem;
                 _itemAfterAction = UnitActionItem.Empty;
                 break;
         }
 
-        actionUIElement.SetActive(true);
+        ToggleActionElements();
+    }
+
+    private void ToggleActionElements()
+    {
+        actionGroundElement.SetActive(!actionGroundElement.activeInHierarchy);
+        actionUIElement.SetActive(!actionUIElement.activeInHierarchy);
     }
 
     private bool IsUnitValidForAction(Unit unit)
     {
-        return unit.Action.Item == _itemBeforeAction;
+        return unit.Action.Item == _itemBeforeAction &&
+               (unit.Type == CurrentActionSo.UnitType || unit.Type == UnitType.Universal);
     }
 
     private void ActionFinished()
@@ -123,14 +163,17 @@ public class UnitActionManager : MonoBehaviour
 
         if (!_onlyOneUnitAction)
         {
-            actionUIElement.SetActive(false);
+            CurrentActionCallback?.Invoke();
+            _currentAction = default;
+            
+            ToggleActionElements();
             OnActionFinished?.Invoke();
         }
     }
 
     private void AddUnitToAction(Unit unit)
     {
-        if (IsUnitValidForAction(unit) && _currentAction != null)
+        if (CurrentActionSo != null && IsUnitValidForAction(unit))
         {
             _unitsInAction.Add(unit);
         }

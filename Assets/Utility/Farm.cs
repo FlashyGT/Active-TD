@@ -7,14 +7,16 @@ using Random = UnityEngine.Random;
 public class Farm : MonoBehaviour, IUpgradeable
 {
     public Vector3 WellLocation { get; private set; }
-
+    
+    [SerializeField] private Well well;
+    
     private Queue<IDamageable> _gardens = new();
 
     #region UnityMethods
 
-    private void Awake()
+    private void Start()
     {
-        WellLocation = ActionManager.Instance.Well.GetUAMLocation();
+        WellLocation = well.GetUAMLocation();
     }
 
     #endregion

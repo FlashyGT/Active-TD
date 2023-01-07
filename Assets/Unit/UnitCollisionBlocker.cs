@@ -1,7 +1,11 @@
+using System;
 using UnityEngine;
 
 public class UnitCollisionBlocker : MonoBehaviour
 {
+    // Set to true after Start() has finished
+    public bool HasFinishedLoading { get; protected set; }
+
     [SerializeField] private CapsuleCollider unitCollider;
     private CapsuleCollider _unitCollisionBlocker;
 
@@ -11,11 +15,16 @@ public class UnitCollisionBlocker : MonoBehaviour
 
     #region UnityMethods
 
-    private void Start()
+    private void Awake()
     {
         IgnoreSelfCollision();
+    }
 
+    private void Start()
+    {
+        _unit = GetComponentInParent<Unit>();
         _layerMask = LayerMask.GetMask(Constants.LayerUnitCollisionBlocker);
+        HasFinishedLoading = true;
     }
 
     #endregion
@@ -33,9 +42,7 @@ public class UnitCollisionBlocker : MonoBehaviour
 
     private void IgnoreSelfCollision()
     {
-        _unit = GetComponentInParent<Unit>();
         _unitCollisionBlocker = GetComponent<CapsuleCollider>();
-
         Physics.IgnoreCollision(unitCollider, _unitCollisionBlocker, true);
     }
 }

@@ -23,7 +23,7 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 
     private void Awake()
     {
-        int health = barricadeSo.healthPerLevel[_currLevel];
+        int health = barricadeSo.HealthPerLevel[_currLevel];
         ObjectHealth = new ObjectHealth(health, health);
     }
 

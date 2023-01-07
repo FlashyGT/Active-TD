@@ -15,6 +15,7 @@ public class PlayerMovement : UnitMovement
     protected override void Start()
     {
         Unit = GetComponentInParent<Unit>();
+        HasFinishedLoading = true;
     }
 
     protected override void Update()
@@ -118,6 +119,6 @@ public class PlayerMovement : UnitMovement
 
     private bool IsUnitInCombat()
     {
-        return Unit.Combat.TargetCount > 0;
+        return Unit.Combat.IsUnitInCombat();
     }
 }

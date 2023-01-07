@@ -168,6 +168,7 @@ MonoBehaviour:
   <Combat>k__BackingField: {fileID: 2145918534668674698}
   <Movement>k__BackingField: {fileID: 4806455986156978109}
   <Action>k__BackingField: {fileID: 1005961539240083075}
+  <UnitCollisionBlocker>k__BackingField: {fileID: 2145918535891652433}
   <OnObjDeath>k__BackingField:
     m_PersistentCalls:
       m_Calls:
@@ -714,7 +715,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Item>k__BackingField: 0
-  <Type>k__BackingField: 0
   isPlayer: 1
 --- !u!1 &8103854489985240749
 GameObject:
@@ -3380,7 +3380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d668de408532c2b4898af1b19cc36ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSo: {fileID: 11400000, guid: 157676683747f8a4da5328b43047abfa, type: 2}
+  unitCombatSo: {fileID: 11400000, guid: 157676683747f8a4da5328b43047abfa, type: 2}
 --- !u!1001 &622056666160529196
 PrefabInstance:
   m_ObjectHideFlags: 0

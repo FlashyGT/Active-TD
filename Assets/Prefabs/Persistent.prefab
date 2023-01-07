@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7593841723506485495}
   - component: {fileID: 8614034215888959188}
   - component: {fileID: 7246884625852872955}
-  - component: {fileID: 1178693591113252415}
   m_Layer: 0
   m_Name: Persistent
   m_TagString: Untagged
@@ -49,7 +48,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <MainCamera>k__BackingField: {fileID: 0}
   <Player>k__BackingField: {fileID: 0}
-  <Barricade>k__BackingField: {fileID: 0}
 --- !u!114 &8614034215888959188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +60,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31aa39cf00cc6354a8ac1e7c21aac4fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  barricade: {fileID: 0}
+  farm: {fileID: 0}
 --- !u!114 &7246884625852872955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,17 +72,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c66d3f6123fc80945bb9e90b7229720e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1178693591113252415
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6716867010490709246}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc186c6087c836d42b379570c415826c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

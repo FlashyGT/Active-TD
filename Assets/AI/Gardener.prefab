@@ -167,10 +167,14 @@ MonoBehaviour:
   <Combat>k__BackingField: {fileID: 0}
   <Movement>k__BackingField: {fileID: 5460617553939526123}
   <Action>k__BackingField: {fileID: 4350900230925120366}
+  <UnitCollisionBlocker>k__BackingField: {fileID: 2145918535891652433}
   <OnObjDeath>k__BackingField:
     m_PersistentCalls:
       m_Calls: []
-  unitSo: {fileID: 11400000, guid: df5812cdf329c3448bf2781406bb34ff, type: 2}
+  <OnObjRespawn>k__BackingField:
+    m_PersistentCalls:
+      m_Calls: []
+  unitSo: {fileID: 11400000, guid: b59cfc1d2bc164b409413516ae3c0b63, type: 2}
 --- !u!54 &622056666127866596
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3023,7 +3027,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Item>k__BackingField: 0
-  <Type>k__BackingField: 1
   isPlayer: 0
 --- !u!1 &8103854489985240749
 GameObject:
@@ -3035,6 +3038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5347945392051774434}
   - component: {fileID: 5460617553939526123}
+  - component: {fileID: 9043400741972415747}
   m_Layer: 11
   m_Name: Movement
   m_TagString: Untagged
@@ -3070,4 +3074,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 200
+  maxMovementDelay: 1
   pathNodeDistanceThreshold: 0.5
+--- !u!114 &9043400741972415747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8103854489985240749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc186c6087c836d42b379570c415826c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

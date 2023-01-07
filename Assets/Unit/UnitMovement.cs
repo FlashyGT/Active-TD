@@ -9,11 +9,12 @@ using Random = UnityEngine.Random;
 public class UnitMovement : MonoBehaviour
 {
     // Set to true after Start() has finished
-    public bool HasFinishedLoading { get; private set; }
+    public bool HasFinishedLoading { get; protected set; }
 
     public Vector3 Destination { get; private set; }
 
     [SerializeField] [Range(0f, 1000f)] protected float speed = 250f;
+    [SerializeField] [Range(0f, 1f)] protected float maxMovementDelay = 1f;
 
     protected Unit Unit;
 
@@ -25,6 +26,8 @@ public class UnitMovement : MonoBehaviour
     [SerializeField] protected float pathNodeDistanceThreshold = 0.5f;
     protected Queue<Vector3> PathToDestination = new();
 
+    protected Pathfinding Pathfinding;
+    
     private Vector3 _pathNodePos;
 
     #region UnityMethods
@@ -32,7 +35,8 @@ public class UnitMovement : MonoBehaviour
     protected virtual void Start()
     {
         Unit = GetComponentInParent<Unit>();
-        Unit.OnObjRespawn.AddListener(InitMovement);
+        Pathfinding = GetComponent<Pathfinding>();
+        Unit.OnObjRespawn.AddListener(RestartMovement);
         HasFinishedLoading = true;
     }
 
@@ -42,12 +46,20 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        Move();
-        Rotate();
+        if (Unit.HasFinishedLoading)
+        {
+            Move();
+            Rotate();   
+        }
     }
 
     #endregion
 
+    public void RestartMovement()
+    {
+        StartCoroutine(InitMovementWithDelay());
+    }
+    
     public virtual void InitMovement()
     {
         Destination = GetDestination();
@@ -148,23 +160,31 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual Queue<Vector3> GetPath()
     {
-        return Pathfinding.Instance.GetPath(Unit.transform.position, Destination);
+        return Pathfinding.GetPath(Unit.transform.position, Destination);
     }
 
     protected IEnumerator CheckUnitStuck()
     {
         Vector3 currUnitPos = Unit.transform.position;
-        yield return new WaitForSeconds(Random.Range(1f, 2f));
+        float delay = Random.Range(maxMovementDelay, maxMovementDelay + 1f);
+        yield return new WaitForSeconds(delay);
         if (Vector3.Distance(currUnitPos, Unit.transform.position) < 0.1f)
         {
             InitMovement();
         }
     }
 
+    private IEnumerator InitMovementWithDelay()
+    {
+        float delay = Random.Range(0f, maxMovementDelay);
+        yield return new WaitForSeconds(delay);
+        InitMovement();
+    }
+
     private void ReachedTarget()
     {
         DestinationReached = true;
         StopMovement();
-        InitMovement();
+        RestartMovement();
     }
 }

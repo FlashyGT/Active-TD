@@ -7,32 +7,32 @@ using UnityEngine;
 public class UnitCombat : MonoBehaviour
 {
     // Set to true after Start() has finished
-    public bool HasFinishedLoading { get; private set; }
+    public bool HasFinishedLoading { get; protected set; }
 
     public event Action OnCombatStarted;
     public event Action OnCombatEnded;
 
-    public int TargetCount => _targets.Count;
-    public IDamageable CurrentTarget => _targets[0];
+    public int TargetCount => Targets.Count;
+    public IDamageable CurrentTarget => GetCurrentTarget();
 
     protected Unit Unit;
 
-    [SerializeField] protected WeaponSO weaponSo;
+    [SerializeField] protected UnitCombatSO unitCombatSo;
 
-    private List<IDamageable> _targets;
+    protected List<IDamageable> Targets;
 
     #region UnityMethods
 
     protected virtual void Awake()
     {
-        _targets = new List<IDamageable>();
+        Targets = new List<IDamageable>();
+        InitSO();
     }
 
     protected virtual void Start()
     {
-        InitSOValues();
         Unit = GetComponentInParent<Unit>();
-        Unit.OnObjRespawn.AddListener(_targets.Clear);
+        Unit.OnObjRespawn.AddListener(Targets.Clear);
         HasFinishedLoading = true;
     }
 
@@ -50,14 +50,19 @@ public class UnitCombat : MonoBehaviour
 
     #endregion
 
+    public virtual bool IsUnitInCombat()
+    {
+        return TargetCount > 0;
+    }
+    
     public virtual void DealDamage()
     {
         // ToList() copies the existing list, so when damage gets dealt and a unit dies
         // we don't modify the actual _targets list, but instead a copy of it.
         // If we modify _targets directly we receive: InvalidOperationException
-        foreach (IDamageable obj in _targets.ToList())
+        foreach (IDamageable obj in Targets.ToList())
         {
-            GameManager.Instance.DamageObject(obj, weaponSo.damage);
+            GameManager.Instance.DamageObject(obj, unitCombatSo.Damage);
         }
     }
 
@@ -66,18 +71,36 @@ public class UnitCombat : MonoBehaviour
         throw new NotImplementedException();
     }
 
-    protected void InitSOValues()
+    protected void InitSO()
     {
         SphereCollider combatCollider = GetComponent<SphereCollider>();
-        combatCollider.radius = weaponSo.range;
+        combatCollider.radius = unitCombatSo.Range;
     }
 
+    public virtual void StopCombat()
+    {
+        Unit.Animator.SetBool(Constants.AnimAttackParam, false);
+    }
+    
+    public virtual void StartCombat()
+    {
+        if (IsUnitInCombat())
+        {
+            Unit.Animator.SetBool(Constants.AnimAttackParam, true);   
+        }
+    }
+
+    protected virtual bool AllowedToStartCombat()
+    {
+        return TargetCount == 1;
+    }
+    
     private void AddTarget(IDamageable obj)
     {
-        _targets.Add(obj);
+        Targets.Add(obj);
         obj.OnDeath += RemoveTarget;
 
-        if (TargetCount == 1)
+        if (AllowedToStartCombat())
         {
             OnCombatStarted?.Invoke();
             Unit.Animator.SetBool(Constants.AnimAttackParam, true);
@@ -86,12 +109,17 @@ public class UnitCombat : MonoBehaviour
 
     private void RemoveTarget(IDamageable obj)
     {
-        _targets.Remove(obj);
+        Targets.Remove(obj);
 
         if (TargetCount == 0)
         {
             OnCombatEnded?.Invoke();
             Unit.Animator.SetBool(Constants.AnimAttackParam, false);
         }
+    }
+
+    private IDamageable GetCurrentTarget()
+    {
+        return TargetCount != 0 ? Targets[0] : null;
     }
 }

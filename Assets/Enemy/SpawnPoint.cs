@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnPoint : MonoBehaviour
 {
@@ -36,7 +37,8 @@ public class SpawnPoint : MonoBehaviour
             yield break;
         }
 
-        yield return new WaitForSeconds(secondsBeforeNextUnit);
+        float delay = Random.Range(secondsBeforeNextUnit / 2, secondsBeforeNextUnit);
+        yield return new WaitForSeconds(delay);
 
         GameObject unitGo = _objectPooler.GetObject(UnitsToSpawn.Dequeue());
         Unit unit = unitGo.GetComponentInDirectChildren<Unit>(true); // TODO: optimize

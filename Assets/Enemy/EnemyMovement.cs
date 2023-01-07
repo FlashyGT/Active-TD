@@ -85,6 +85,6 @@ public class EnemyMovement : UnitMovement
 
     private bool IsUnitInCombat()
     {
-        return Unit.Combat.TargetCount > 0;
+        return Unit.Combat.IsUnitInCombat();
     }
 }

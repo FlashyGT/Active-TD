@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b90c3ba6fd3b304bb6d89f05898ad36, type: 3}
   m_Name: Player_M_W_01
   m_EditorClassIdentifier: 
-  weaponType: 0
-  damage: 50
-  range: 2
-  fireRate: 0
-  projectile: {fileID: 0}
+  <WeaponType>k__BackingField: 0
+  <Damage>k__BackingField: 50
+  <Range>k__BackingField: 2
+  <FireRate>k__BackingField: 0
+  <AttacksBeforeResupply>k__BackingField: 0
+  <FoodRequiredAfter>k__BackingField: 0
+  <Projectile>k__BackingField: {fileID: 0}

@@ -8,10 +8,18 @@ public class UnitRangedMovement : UnitMovement
 
     protected override void FixedUpdate()
     {
-        Rotate();
+        if (Unit.HasFinishedLoading)
+        {
+            Rotate();   
+        }
     }
 
     #endregion
+    
+    public override void InitMovement()
+    {
+        
+    }
 
     protected override void Rotate()
     {
@@ -28,11 +36,6 @@ public class UnitRangedMovement : UnitMovement
 
     protected override bool IsRotationAllowed()
     {
-        return IsUnitInCombat();
-    }
-
-    private bool IsUnitInCombat()
-    {
-        return Unit.Combat.TargetCount > 0;
+        return Unit.Combat.IsUnitInCombat();
     }
 }

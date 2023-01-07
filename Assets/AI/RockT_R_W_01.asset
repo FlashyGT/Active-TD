@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b90c3ba6fd3b304bb6d89f05898ad36, type: 3}
   m_Name: RockT_R_W_01
   m_EditorClassIdentifier: 
-  weaponType: 1
-  damage: 30
-  range: 30
-  fireRate: 0.5
-  projectile: {fileID: 2402444675694731286, guid: 0ec1a79a97854a64fb873dc2ad062281,
+  <WeaponType>k__BackingField: 1
+  <Damage>k__BackingField: 30
+  <Range>k__BackingField: 30
+  <FireRate>k__BackingField: 0.5
+  <AttacksBeforeResupply>k__BackingField: 8
+  <FoodRequiredAfter>k__BackingField: 30
+  <Projectile>k__BackingField: {fileID: 2402444675694731286, guid: 0ec1a79a97854a64fb873dc2ad062281,
     type: 3}

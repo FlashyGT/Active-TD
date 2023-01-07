@@ -7,14 +7,12 @@ using UnityEngine;
 public class ActionManager : MonoBehaviour
 {
     public static ActionManager Instance { get; private set; }
-
+    
     [SerializeField] private Barricade barricade;
     [SerializeField] private Farm farm;
 
-    [field: SerializeField] public Well Well { get; private set; }
-
     private readonly Dictionary<UnitType, Queue<Unit>> _units = new();
-    private readonly Dictionary<UnitType, Queue<IUnitAction>> _actions = new();
+    private readonly Dictionary<UnitType, Queue<IMultipleUnitAction>> _actions = new();
 
     #region UnityMethods
 
@@ -53,7 +51,7 @@ public class ActionManager : MonoBehaviour
             return unit.transform.position;
         }
 
-        target.OnObjDeath.AddListener(unit.Movement.InitMovement);
+        target.OnObjDeath.AddListener(unit.Movement.RestartMovement);
         return target.GetAttackPoint();
     }
 
@@ -69,7 +67,7 @@ public class ActionManager : MonoBehaviour
         }
     }
 
-    public void AssignUnitToAction(IUnitAction unitAction)
+    public void AssignUnitToAction(IMultipleUnitAction unitAction)
     {
         UnitType unitType = unitAction.GetUnitType();
 
@@ -81,7 +79,7 @@ public class ActionManager : MonoBehaviour
             _actions[unitType].Enqueue(unitAction);
             return;
         }
-
+        
         Queue<Vector3> destinations = unitAction.GetUnitDestinations();
         Unit unit = units.Dequeue();
 
@@ -89,7 +87,7 @@ public class ActionManager : MonoBehaviour
         unit.Action.StartAction(destinations);
     }
 
-    public void RemoveAction(IUnitAction action)
+    public void RemoveAction(IMultipleUnitAction action)
     {
         UnitType type = action.GetUnitType();
         _actions[type] = GameManager.Instance.RemoveItemFromQueue(action, _actions[type]);
@@ -100,7 +98,7 @@ public class ActionManager : MonoBehaviour
         foreach (UnitType unitType in Enum.GetValues(typeof(UnitType)))
         {
             _units.Add(unitType, new Queue<Unit>());
-            _actions.Add(unitType, new Queue<IUnitAction>());
+            _actions.Add(unitType, new Queue<IMultipleUnitAction>());
         }
     }
 
