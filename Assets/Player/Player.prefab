@@ -766,7 +766,7 @@ MonoBehaviour:
   speed: 250
   maxMovementDelay: 1
   pathNodeDistanceThreshold: 0.5
-  testing: 1
+  testing: 0
 --- !u!1 &8553737791729567364
 GameObject:
   m_ObjectHideFlags: 0

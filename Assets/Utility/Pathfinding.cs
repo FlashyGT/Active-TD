@@ -32,6 +32,7 @@ public class Pathfinding : MonoBehaviour
     {
         Queue<Vector3> path = new();
 
+        // If positions are too close to each other, don't do anything
         if (startPos == targetPos || Vector3.Distance(startPos, targetPos) < MinMoveThreshold)
         {
             return path;
@@ -39,6 +40,7 @@ public class Pathfinding : MonoBehaviour
 
         InitValues(unitRadius, layerMask);
 
+        // Get paths end node which is also the target position
         PathNode endNode = CalculatePath(startPos, targetPos);
         if (endNode != null)
         {
@@ -65,9 +67,15 @@ public class Pathfinding : MonoBehaviour
 
         do
         {
+            // Get the nearest node to the target position
             _currentNode = GetCurrentNode();
+            
+            // We need to add the current node to the closed nodes,
+            // because we are finding neighbours for it
             _openNodes.Remove(_currentNode);
             _closedNodes.Add(_currentNode);
+            
+            // Finds nodes neighbours depending on the move threshold
             SearchForNeighbours(_currentNode);
         } while (!HasReachedTargetPosition() && _openNodes.Count > 0);
 
@@ -89,6 +97,8 @@ public class Pathfinding : MonoBehaviour
     {
         List<Vector3> directions = GetDirections();
 
+        // Cast a sphere in each direction from a point to find valid directions,
+        // they are valid if they don't collide with colliders
         foreach (Vector3 direction in directions)
         {
             if (!Physics.SphereCast(parent.Position, _unitRadius, direction, out _, direction.magnitude, _layerMask))
@@ -103,7 +113,7 @@ public class Pathfinding : MonoBehaviour
                 }
 
                 PathNode newNode = GetNodeIfExists(nodePosition);
-
+                
                 if (newNode == null)
                 {
                     newNode = CreateNode(nodePosition, parent);
@@ -115,11 +125,14 @@ public class Pathfinding : MonoBehaviour
 
     private PathNode GetEndNode()
     {
+        // Not close enough to target, so return no end node
         if (!HasReachedTargetPosition())
         {
             return null;
         }
 
+        // Distance within threshold, so create another node
+        // to create a node at the target position
         if (Vector3.Distance(_currentNode.Position, _targetPos) > MinMoveThreshold)
         {
             return CreateNode(_targetPos, _currentNode);
@@ -130,6 +143,7 @@ public class Pathfinding : MonoBehaviour
 
     private int GetDefaultLayerMask()
     {
+        // Only collisions with objects that have one of these layers will get detected
         string[] layers =
         {
             Constants.LayerEnvironment,
@@ -153,6 +167,7 @@ public class Pathfinding : MonoBehaviour
             new Vector3(-1f, 0f, -1f) // right & back (diagonal)
         };
 
+        // Depending on the threshold modify directions
         for (int i = 0; i < directions.Count; i++)
         {
             directions[i] *= MaxMoveThreshold;
