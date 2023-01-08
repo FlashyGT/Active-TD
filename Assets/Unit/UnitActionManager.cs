@@ -42,6 +42,10 @@ public class UnitActionManager : MonoBehaviour
             _currentAction = new KeyValuePair<UnitActionSO, Action>(definedActions[0], null);
             InitUnitAction();
         }
+        else
+        {
+            GameManager.Instance.GameStarted += Reset;
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -163,7 +167,7 @@ public class UnitActionManager : MonoBehaviour
         foreach (Unit unit in _unitsInAction)
         {
             unit.Action.Item = _itemAfterAction;
-            unit.Action.OnActionFinished?.Invoke();
+            unit.Action.onActionFinished?.Invoke();
         }
 
         _unitsInAction.Clear();
@@ -212,6 +216,16 @@ public class UnitActionManager : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void Reset()
+    {
+        _unitsInAction.Clear();
+        _actionQueue.Clear();
+        _currentAction = default;
+        actionGroundElement.SetActive(false);
+        actionUIElement.SetActive(false);
+        ResetFiller();
     }
 }
 

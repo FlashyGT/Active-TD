@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class UnitAction : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class UnitAction : MonoBehaviour
     
     [field: SerializeField] public UnitActionItem Item { get; set; }
     public Vector3 CurrentDestination { get; private set; }
-    public Action OnActionFinished;
+    public UnityEvent onActionFinished;
 
     [SerializeField] private bool isPlayer;
 
@@ -30,8 +31,7 @@ public class UnitAction : MonoBehaviour
             _unitType = _unit.Type;
             
             _unitBaseLocation = _unit.transform.position;
-            OnActionFinished += ChangeDestination;
-            ActionManager.Instance.UnitIsAvailable(_unitType, _unit);
+            GameManager.Instance.GameStarted += Reset;
         }
 
         HasFinishedLoading = true;
@@ -60,5 +60,15 @@ public class UnitAction : MonoBehaviour
             CurrentDestination = _destinations.Dequeue();
             _unit.Movement.InitMovement();
         }
+    }
+
+    private void Reset()
+    {
+        Item = UnitActionItem.Empty;
+        CurrentDestination = _unitBaseLocation;
+        _unit.transform.position = _unitBaseLocation;
+        onActionFinished.RemoveAllListeners();
+        onActionFinished.AddListener(ChangeDestination);
+        ActionManager.Instance.UnitIsAvailable(_unitType, _unit);
     }
 }

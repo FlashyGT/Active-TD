@@ -27,6 +27,12 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
         ObjectHealth = new ObjectHealth(health, health);
     }
 
+    private void Start()
+    {
+        OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
+        GameManager.Instance.GameStarted += OnObjRespawn.Invoke;
+    }
+
     #endregion
 
     #region IDamageable
@@ -39,6 +45,7 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
     public void OnDead()
     {
         OnObjDeath.Invoke();
+        OnObjDeath.RemoveAllListeners();
         OnDeath?.Invoke(this);
     }
 

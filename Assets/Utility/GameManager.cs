@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +9,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    public event Action GameStarted;
+    
     [field: SerializeField] public Camera MainCamera { get; private set; }
     [field: SerializeField] public GameObject Player { get; private set; }
 
+    private Coroutine _gameLostCoroutine;
     
     public int FoodAmount {
         get
@@ -39,6 +43,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI foodAmountUI;
     [SerializeField] private TextMeshProUGUI moneyAmountUI;
 
+    [SerializeField] private GameObject gameLostScreen;
+    
     #region UnityMethods
 
     private void Awake()
@@ -93,8 +99,41 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
+    
+    public void StartGame()
+    {
+        GameStarted?.Invoke();
+        UnpauseGame();
+
+        if (_gameLostCoroutine != null)
+        {
+            StopCoroutine(_gameLostCoroutine);   
+        }
+    }
+
     public void GameLost()
     {
+        _gameLostCoroutine = StartCoroutine(PauseGameWithDelay());
+        gameLostScreen.SetActive(true);
+    }
+
+    public void PauseGame()
+    {
         Time.timeScale = 0;
+    }
+    
+    public void UnpauseGame()
+    {
+        Time.timeScale = 1;
+    }
+
+    private IEnumerator PauseGameWithDelay()
+    {
+        yield return new WaitForSeconds(3f);
+        PauseGame();
     }
 }

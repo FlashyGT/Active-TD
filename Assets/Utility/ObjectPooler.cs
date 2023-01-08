@@ -30,6 +30,11 @@ public class ObjectPooler : MonoBehaviour
         _poolParent = new GameObject("Object Pools").transform;
     }
 
+    private void Start()
+    {
+        GameManager.Instance.GameStarted += ResetPools;
+    }
+
     #endregion
 
     public GameObject GetObject(GameObject poolObject)
@@ -92,5 +97,16 @@ public class ObjectPooler : MonoBehaviour
 
         // Get next object in pool that was just added
         return objectPool[poolIndex + 1];
+    }
+
+    private void ResetPools()
+    {
+        foreach (var pool in _pools)
+        {
+            foreach (GameObject poolObject in pool.Value)
+            {
+                poolObject.SetActive(false);
+            }
+        }
     }
 }

@@ -57,11 +57,11 @@ public class UnitMovement : MonoBehaviour
 
     public void RestartMovement()
     {
-        if (Unit.ObjectHealth.IsDead())
+        if (Unit.ObjectHealth.IsDead() || !Unit.Parent.activeInHierarchy)
         {
             return;
         }
-        
+
         StartCoroutine(InitMovementWithDelay());
     }
     
@@ -181,6 +181,7 @@ public class UnitMovement : MonoBehaviour
 
     private IEnumerator InitMovementWithDelay()
     {
+        StopMovement();
         float delay = Random.Range(0f, maxMovementDelay);
         yield return new WaitForSeconds(delay);
         InitMovement();

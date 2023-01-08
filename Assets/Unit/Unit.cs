@@ -24,12 +24,15 @@ public class Unit : MonoBehaviour, IDamageable
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
     [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
+    public GameObject Parent { get; private set; }
+
     [SerializeField] protected UnitSO unitSo;
 
     #region UnityMethods
 
     protected virtual void Awake()
     {
+        Parent = transform.parent.gameObject;
         InitSO();
         InitUnit();
     }
@@ -38,6 +41,7 @@ public class Unit : MonoBehaviour, IDamageable
     {
         Rigidbody = GetComponent<Rigidbody>();
         OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
+        GameManager.Instance.GameStarted += Reset;
     }
 
     #endregion
@@ -81,12 +85,17 @@ public class Unit : MonoBehaviour, IDamageable
     {
         StartCoroutine(InitializeUnit());
     }
+    
+    protected virtual void Reset()
+    {
+        OnObjRespawn.Invoke();
+    }
 
     private IEnumerator InitializeUnit()
     {
         // Waiting for components to get loaded...
         yield return new WaitUntil(ComponentsLoaded);
-        OnObjRespawn.Invoke();
+        Reset();
         HasFinishedLoading = true;
     }
 

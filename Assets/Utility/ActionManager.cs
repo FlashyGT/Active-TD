@@ -30,6 +30,11 @@ public class ActionManager : MonoBehaviour
         InitializeData();
     }
 
+    private void Start()
+    {
+        GameManager.Instance.GameStarted += Reset;
+    }
+
     #endregion
 
     public Vector3 GetEnemyActionDestination(Unit unit)
@@ -105,5 +110,18 @@ public class ActionManager : MonoBehaviour
     private bool HasActionsForUnitType(UnitType unitType)
     {
         return _actions[unitType].Count != 0;
+    }
+
+    private void Reset()
+    {
+        foreach (var unitQueue in _units.Values)
+        {
+            unitQueue.Clear();
+        }
+        
+        foreach (var actionQueue in _actions.Values)
+        {
+            actionQueue.Clear();
+        }
     }
 }

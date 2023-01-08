@@ -10,9 +10,12 @@ public class SpawnPoint : MonoBehaviour
 
     [SerializeField] private int secondsBeforeNextUnit = 1;
 
+    private Coroutine _spawningCoroutine;
+    
     private EnemySpawner _enemySpawner;
     private ObjectPooler _objectPooler;
 
+    #region UnityMethods
     private void Awake()
     {
         UnitsToSpawn = new Queue<GameObject>();
@@ -24,10 +27,18 @@ public class SpawnPoint : MonoBehaviour
         _enemySpawner.OnWaveGenerated += StartSpawning;
         _objectPooler = ObjectPooler.Instance;
     }
+    
+    #endregion
 
+    public void ResetSpawning()
+    {
+        _spawningCoroutine = null;
+        UnitsToSpawn.Clear();
+    }
+    
     private void StartSpawning()
     {
-        StartCoroutine(SpawnUnit());
+        _spawningCoroutine = StartCoroutine(SpawnUnit());
     }
 
     private IEnumerator SpawnUnit()

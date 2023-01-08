@@ -20,6 +20,8 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
 
     [SerializeField] private Farm farm;
 
+    private Coroutine _actionCoroutine;
+    
     private int _currentGardenStage = 0;
 
     #region UnityMethods
@@ -32,8 +34,9 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
 
     private void Start()
     {
-        StartCoroutine(ActionLoop());
         OnUnitActionRequired += ActionManager.Instance.AssignUnitToAction;
+        OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
+        GameManager.Instance.GameStarted += Reset;
     }
 
     #endregion
@@ -102,7 +105,7 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
         gardenStages[_currentGardenStage].SetActive(false);
         ChangeStageIndex();
         gardenStages[_currentGardenStage].SetActive(true);
-        StartCoroutine(ActionLoop());
+        _actionCoroutine = StartCoroutine(ActionLoop());
     }
 
     private void ChangeStageIndex()
@@ -153,5 +156,20 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
     {
         OnUnitActionFinished?.Invoke();
         OnUnitActionFinished = null;
+    }
+
+    private void Reset()
+    {
+        OnObjRespawn?.Invoke();
+        
+        if (_actionCoroutine != null)
+        {
+            StopCoroutine(_actionCoroutine);
+        }
+
+        gardenStages[_currentGardenStage].SetActive(false);
+        _currentGardenStage = 0;
+        gardenStages[_currentGardenStage].SetActive(true);
+        _actionCoroutine = StartCoroutine(ActionLoop());
     }
 }

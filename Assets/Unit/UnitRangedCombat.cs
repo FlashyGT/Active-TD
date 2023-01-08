@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class UnitRangedCombat : UnitCombat
     
     private bool _waitingForFood;
 
+    private Coroutine _foodCoroutine;
+    
     #region UnityMethods
 
     protected override void Awake()
@@ -31,7 +34,7 @@ public class UnitRangedCombat : UnitCombat
         Unit = _combatUnit;
         Unit.OnObjRespawn.AddListener(Targets.Clear);
         InitProjectile();
-        StartCoroutine(FoodRequired());
+        GameManager.Instance.GameStarted += Reset;
         HasFinishedLoading = true;
     }
 
@@ -104,6 +107,18 @@ public class UnitRangedCombat : UnitCombat
     {
         _waitingForFood = false;
         StartCombat();
-        StartCoroutine(FoodRequired());
+        _foodCoroutine = StartCoroutine(FoodRequired());
+    }
+
+    private void Reset()
+    {
+        if (_foodCoroutine != null)
+        {
+            StopCoroutine(_foodCoroutine);
+        }
+
+        _waitingForFood = false;
+        _foodCoroutine = StartCoroutine(FoodRequired());
+        ResetAttacks();
     }
 }

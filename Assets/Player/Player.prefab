@@ -715,6 +715,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Item>k__BackingField: 0
+  onActionFinished:
+    m_PersistentCalls:
+      m_Calls: []
   isPlayer: 1
 --- !u!1 &8103854489985240749
 GameObject:
@@ -761,6 +764,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 250
+  maxMovementDelay: 1
   pathNodeDistanceThreshold: 0.5
   testing: 1
 --- !u!1 &8553737791729567364

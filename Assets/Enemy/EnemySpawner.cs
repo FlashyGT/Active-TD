@@ -33,10 +33,19 @@ public class EnemySpawner : MonoBehaviour
 
     private void Start()
     {
-        GenerateCurrentWave(_currentWave);
+        GameManager.Instance.GameStarted += StartGenerating;
     }
 
     #endregion
+
+    private void StartGenerating()
+    {
+        foreach (SpawnPoint spawnPoint in spawnPoints)
+        {
+            spawnPoint.ResetSpawning();
+        }
+        GenerateCurrentWave(_currentWave);
+    }
 
     private void GenerateCurrentWave(int currentWave)
     {
