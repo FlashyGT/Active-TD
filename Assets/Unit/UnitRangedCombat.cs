@@ -34,6 +34,7 @@ public class UnitRangedCombat : UnitCombat
         Unit = _combatUnit;
         Unit.OnObjRespawn.AddListener(Targets.Clear);
         InitProjectile();
+        Reset();
         GameManager.Instance.GameStarted += Reset;
         HasFinishedLoading = true;
     }

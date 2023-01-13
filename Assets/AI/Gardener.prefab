@@ -3027,6 +3027,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Item>k__BackingField: 0
+  onActionFinished:
+    m_PersistentCalls:
+      m_Calls: []
   isPlayer: 0
 --- !u!1 &8103854489985240749
 GameObject:

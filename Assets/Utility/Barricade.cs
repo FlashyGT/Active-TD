@@ -1,16 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
 
-public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
+public class Barricade : DamageableBuilding
 {
-    public ObjectHealth ObjectHealth { get; set; }
-
-    public event Action<IDamageable> OnDeath;
-    public event Action OnDamageTaken;
-    [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
-    [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
     [SerializeField] private BarricadeSO barricadeSo;
 
@@ -27,34 +22,16 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
         ObjectHealth = new ObjectHealth(health, health);
     }
 
-    private void Start()
+    protected override void Start()
     {
         OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
-        GameManager.Instance.GameStarted += OnObjRespawn.Invoke;
     }
 
     #endregion
 
     #region IDamageable
 
-    public void OnDamageTake()
-    {
-        OnDamageTaken?.Invoke();
-    }
-
-    public void OnDead()
-    {
-        OnObjDeath.Invoke();
-        OnObjDeath.RemoveAllListeners();
-        OnDeath?.Invoke(this);
-    }
-
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
-    public Vector3 GetAttackPoint()
+    public override Vector3 GetAttackPoint()
     {
         Vector3 pointPos = attackPoint.position;
         int xDeviation = Random.Range(-attackPointXDeviation, attackPointXDeviation);
@@ -63,8 +40,27 @@ public class Barricade : MonoBehaviour, IDamageable, IUpgradeable
 
     #endregion
 
-    public void Upgrade()
+    public override void Buff()
+    {
+        _currLevel++;
+        ObjectHealth.MaxHealth = barricadeSo.HealthPerLevel[_currLevel];
+        ObjectHealth.ResetHealth();
+    }
+
+    public override void Build()
+    {
+        base.Build();
+        Reset();
+        GameManager.Instance.GameStarted += Reset;
+    }
+    
+    public override Queue<Vector3> GetActionDestinations(KeyValuePair<UnitActionType, UnitActionItem> action)
     {
         throw new NotImplementedException();
+    }
+
+    private void Reset()
+    {
+        OnObjRespawn?.Invoke();
     }
 }

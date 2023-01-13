@@ -8,42 +8,46 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
-
+    
+    public event Action<bool> WaveState;
+    
     public event Action GameStarted;
     
     [field: SerializeField] public Camera MainCamera { get; private set; }
     [field: SerializeField] public GameObject Player { get; private set; }
 
-    private Coroutine _gameLostCoroutine;
-    
     public int FoodAmount {
         get
         {
-            return _foodAmount;
+            return foodAmount;
         }
         set
         {
-            _foodAmount = value;
-            foodAmountUI.text = _foodAmount.ToString();
+            foodAmount = value;
+            foodAmountUI.text = foodAmount.ToString();
         }
     }
     public int MoneyAmount {
         get
         {
-            return _moneyAmount;
+            return moneyAmount;
         }
         set
         {
-            _moneyAmount = value;
-            moneyAmountUI.text = _moneyAmount.ToString();
+            moneyAmount = value;
+            moneyAmountUI.text = moneyAmount.ToString();
         }
     }
-    private int _foodAmount;
-    private int _moneyAmount;
+    [SerializeField] private int foodAmount;
+    [SerializeField] private int moneyAmount;
     [SerializeField] private TextMeshProUGUI foodAmountUI;
     [SerializeField] private TextMeshProUGUI moneyAmountUI;
 
     [SerializeField] private GameObject gameLostScreen;
+    
+    [SerializeField] private EnemySpawner _enemySpawner;
+
+    private Coroutine _gameLostCoroutine;
     
     #region UnityMethods
 
@@ -59,6 +63,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _enemySpawner.OnWaveGenerated += UpdateWaveState;
+        _enemySpawner.OnWaveDefeated += UpdateWaveState;
+    }
+
     #endregion
 
     #region Combat
@@ -68,7 +78,6 @@ public class GameManager : MonoBehaviour
         ObjectHealth objectHealth = obj.ObjectHealth;
 
         objectHealth.Health -= damage;
-        obj.OnDamageTake();
 
         if (objectHealth.Health <= 0)
         {
@@ -131,9 +140,19 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
+    public bool HasMoney()
+    {
+        return MoneyAmount != 0;
+    }
+
     private IEnumerator PauseGameWithDelay()
     {
         yield return new WaitForSeconds(3f);
         PauseGame();
+    }
+
+    private void UpdateWaveState()
+    {
+        WaveState?.Invoke(_enemySpawner.WaveInProgress);
     }
 }

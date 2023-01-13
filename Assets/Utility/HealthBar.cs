@@ -8,8 +8,10 @@ public class HealthBar : MonoBehaviour
     [SerializeField] private Image fillBar;
 
     // for some reason Unity doesn't allow referencing interfaces, so we use this as a workaround
-    [SerializeField] private GameObject objWithIDamageable;
-    private IDamageable _obj;
+    [SerializeField] private GameObject obj;
+    private IDamageable _objIDamageable;
+    private ISpawnable _objISpawnable;
+    private ObjectHealth _objHealth;
 
     private float _health;
     private float _maxHealth;
@@ -18,10 +20,15 @@ public class HealthBar : MonoBehaviour
 
     private void Start()
     {
-        _obj = objWithIDamageable.GetComponent<IDamageable>();
-        _obj.OnDamageTaken += UpdateHealthBar;
-        _obj.OnObjRespawn.AddListener(ResetHealthBar);
-        _maxHealth = _obj.ObjectHealth.MaxHealth;
+        _objIDamageable = obj.GetComponent<IDamageable>();
+        _objISpawnable = obj.GetComponent<ISpawnable>(); // TODO: Refactor
+        _objHealth = _objIDamageable.ObjectHealth;
+        
+        _objISpawnable.OnObjRespawn.AddListener(ResetHealthBar);
+        
+        _objHealth.OnHealthChange += UpdateHealthBar;
+        _objHealth.OnHealthReset += HealthReset;
+        HealthReset();
     }
 
     #endregion
@@ -33,16 +40,27 @@ public class HealthBar : MonoBehaviour
 
     private void UpdateHealthBar()
     {
-        if (!container.activeInHierarchy)
+        if (_objHealth.FullHealth())
+        {
+            container.SetActive(false);
+            return;
+        }
+        
+        if (!container.activeInHierarchy && !_objHealth.FullHealth())
         {
             container.SetActive(true);
         }
 
-        _health = _obj.ObjectHealth.Health;
+        _health = _objIDamageable.ObjectHealth.Health;
         ChangeFillAmount();
         ChangeColor();
     }
 
+    private void HealthReset()
+    {
+        _maxHealth = _objIDamageable.ObjectHealth.MaxHealth;
+    }
+    
     private void ChangeFillAmount()
     {
         fillBar.fillAmount = _health / _maxHealth;

@@ -31,6 +31,7 @@ public class UnitAction : MonoBehaviour
             _unitType = _unit.Type;
             
             _unitBaseLocation = _unit.transform.position;
+            Reset();
             GameManager.Instance.GameStarted += Reset;
         }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Unit : MonoBehaviour, IDamageable
+public class Unit : MonoBehaviour, IDamageable, ISpawnable
 {
     // Set to true after Start() has finished
     public bool HasFinishedLoading { get; protected set; }
@@ -16,11 +16,10 @@ public class Unit : MonoBehaviour, IDamageable
     [field: SerializeField] public UnitAction Action { get; private set; }
     [field: SerializeField] public UnitCollisionBlocker UnitCollisionBlocker { get; private set; }
 
-    public UnitBuilding UnitBuilding { get; set; }
+    public Building Building { get; set; }
     public UnitType Type { get; private set; }
     public ObjectHealth ObjectHealth { get; set; }
     public event Action<IDamageable> OnDeath;
-    public event Action OnDamageTaken;
     [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
     [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
 
@@ -47,11 +46,6 @@ public class Unit : MonoBehaviour, IDamageable
     #endregion
 
     #region IDamageable
-
-    public void OnDamageTake()
-    {
-        OnDamageTaken?.Invoke();
-    }
 
     public virtual void OnDead()
     {

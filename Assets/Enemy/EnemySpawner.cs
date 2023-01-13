@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
 public class EnemySpawner : MonoBehaviour
 {
     public event Action OnWaveGenerated;
+    public event Action OnWaveDefeated;
 
+    public bool WaveInProgress => AmountOfUnitsInWave > 0;
+    
     public int AmountOfUnitsInWave
     {
         get { return _amountOfUnitsInWave; }
@@ -90,6 +94,8 @@ public class EnemySpawner : MonoBehaviour
     private IEnumerator WaveDefeated()
     {
         _currentWave++;
+        timeBetweenWaves += 5;
+        OnWaveDefeated?.Invoke();
         yield return new WaitForSeconds(timeBetweenWaves);
         if (waves.Count != _currentWave)
         {

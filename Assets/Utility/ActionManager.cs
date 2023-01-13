@@ -39,9 +39,9 @@ public class ActionManager : MonoBehaviour
 
     public Vector3 GetEnemyActionDestination(Unit unit)
     {
-        IDamageable target;
+        DamageableBuilding target;
 
-        if (!barricade.ObjectHealth.IsDead())
+        if (barricade.buildingBuilt && !barricade.ObjectHealth.IsDead())
         {
             target = barricade;
         }
@@ -57,6 +57,7 @@ public class ActionManager : MonoBehaviour
         }
 
         target.OnObjDeath.AddListener(unit.Movement.RestartMovement);
+        
         return target.GetAttackPoint();
     }
 

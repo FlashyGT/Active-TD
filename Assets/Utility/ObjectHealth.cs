@@ -1,13 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 public class ObjectHealth
 {
-    public int Health { get; set; }
+    public event Action OnHealthChange;
+    public event Action OnHealthReset;
+    
+    public int Health {
+        get => _health;
+        set
+        {
+            _health = value;
+            OnHealthChange?.Invoke();
+        }
+    }
 
     public int MaxHealth { get; set; }
 
+    private int _health;
+    
     public ObjectHealth(int currentHealth, int maxHealth)
     {
         Health = currentHealth;
@@ -17,8 +27,14 @@ public class ObjectHealth
     public void ResetHealth()
     {
         Health = MaxHealth;
+        OnHealthReset?.Invoke();
     }
 
+    public bool FullHealth()
+    {
+        return Health == MaxHealth;
+    }
+    
     public bool IsDead()
     {
         return Health <= 0;

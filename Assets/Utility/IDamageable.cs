@@ -8,13 +8,6 @@ public interface IDamageable
 
     // Used by the combat system
     public event Action<IDamageable> OnDeath;
-    public event Action OnDamageTaken;
-
-    // Used for this specific unit to manage components and callbacks for external scripts
-    public UnityEvent OnObjDeath { get; set; }
-    public UnityEvent OnObjRespawn { get; set; }
-
-    public void OnDamageTake();
 
     public void OnDead();
 

@@ -26,7 +26,7 @@ public class CombatUnit : Unit, IMultipleUnitAction
 
     public Queue<Vector3> GetUnitDestinations()
     {
-        Queue<Vector3> destinations = UnitBuilding.GetActionDestinations(unitActionManager.GetCurrentAction());
+        Queue<Vector3> destinations = Building.GetActionDestinations(unitActionManager.GetCurrentAction());
         destinations.Enqueue(GetUAMLocation());
         return destinations;
     }

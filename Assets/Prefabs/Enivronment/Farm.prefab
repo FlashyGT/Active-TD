@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c40fdbd605aeed40a542e10b7127b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  well: {fileID: 0}
 --- !u!1001 &3945114292831715370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -722,6 +723,11 @@ PrefabInstance:
       propertyPath: farm
       value: 
       objectReference: {fileID: 6765727136005718328}
+    - target: {fileID: 2142422684454538646, guid: 9e12af7078717af40a4d4096d91cdb31,
+        type: 3}
+      propertyPath: buildWithStart
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2249001276430297732, guid: 9e12af7078717af40a4d4096d91cdb31,
         type: 3}
       propertyPath: m_Layer
@@ -731,6 +737,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 3390152404882774478, guid: 9e12af7078717af40a4d4096d91cdb31,
+        type: 3}
+      propertyPath: maxUpgradeAtStart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3944795376109128881, guid: 9e12af7078717af40a4d4096d91cdb31,
         type: 3}

@@ -4,16 +4,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
+public class Garden : DamageableBuilding, IMultipleUnitAction
 {
-    public ObjectHealth ObjectHealth { get; set; }
     public event Action<IMultipleUnitAction> OnUnitActionRequired;
     public event Action OnUnitActionFinished;
-    public event Action<IDamageable> OnDeath;
-    public event Action OnDamageTaken;
-    [field: SerializeField] public UnityEvent OnObjDeath { get; set; }
-    [field: SerializeField] public UnityEvent OnObjRespawn { get; set; }
-
+    
     [SerializeField] private UnitActionManager unitActionManager;
     [SerializeField] private GardenSO gardenSo;
     [SerializeField] private List<GameObject> gardenStages;
@@ -29,41 +24,23 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
     private void Awake()
     {
         ObjectHealth = new ObjectHealth(gardenSo.Health, gardenSo.Health);
-        farm.AddGarden(this);
     }
 
-    private void Start()
+    protected override void Start()
     {
         OnUnitActionRequired += ActionManager.Instance.AssignUnitToAction;
         OnObjRespawn.AddListener(ObjectHealth.ResetHealth);
-        GameManager.Instance.GameStarted += Reset;
     }
 
     #endregion
 
     #region IDamageable
 
-    public void OnDamageTake()
+    public override void OnDead()
     {
-        OnDamageTaken?.Invoke();
-    }
-
-    public void OnDead()
-    {
-        OnObjDeath.Invoke();
-        OnDeath?.Invoke(this);
+        base.OnDead();
         ResetAction();
         ActionManager.Instance.RemoveAction(this);
-    }
-
-    public GameObject GetGameObject()
-    {
-        return gameObject;
-    }
-
-    public Vector3 GetAttackPoint()
-    {
-        return transform.position;
     }
 
     #endregion
@@ -95,6 +72,18 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
 
     #endregion
 
+    public override void Build()
+    {
+        base.Build();
+        Reset();
+        GameManager.Instance.GameStarted += Reset;
+    }
+
+    public override Queue<Vector3> GetActionDestinations(KeyValuePair<UnitActionType, UnitActionItem> action)
+    {
+        throw new NotImplementedException();
+    }
+    
     private bool HasReachedHarvestStage()
     {
         return _currentGardenStage == gardenStages.Count - 1;
@@ -160,8 +149,9 @@ public class Garden : MonoBehaviour, IDamageable, IMultipleUnitAction
 
     private void Reset()
     {
+        farm.AddGarden(this);
         OnObjRespawn?.Invoke();
-        
+
         if (_actionCoroutine != null)
         {
             StopCoroutine(_actionCoroutine);

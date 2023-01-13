@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RockThrowerBuilding : UnitBuilding, ISingleUnitAction
+public class RockThrowerBuilding : Building, ISingleUnitAction
 {
     [SerializeField] private UnitActionManager unitActionManager;
     [SerializeField] private FoodHouse foodHouse;

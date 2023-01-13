@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class Farm : MonoBehaviour, IUpgradeable
+public class Farm : MonoBehaviour
 {
     public Vector3 WellLocation { get; private set; }
     
     [SerializeField] private Well well;
     
-    private Queue<IDamageable> _gardens = new();
+    private Queue<DamageableBuilding> _gardens = new();
 
     #region UnityMethods
 
@@ -23,11 +23,16 @@ public class Farm : MonoBehaviour, IUpgradeable
 
     public void AddGarden(Garden garden)
     {
+        if (_gardens.Contains(garden))
+        {
+            return;
+        }
+        
         _gardens.Enqueue(garden);
         garden.OnDeath += GardenDied;
     }
 
-    public IDamageable GetGarden()
+    public DamageableBuilding GetGarden()
     {
         if (_gardens.Count == 0)
         {
@@ -37,14 +42,9 @@ public class Farm : MonoBehaviour, IUpgradeable
         return _gardens.Peek();
     }
 
-    public void Upgrade()
-    {
-        throw new NotImplementedException();
-    }
-
     private void GardenDied(IDamageable garden)
     {
-        _gardens = GameManager.Instance.RemoveItemFromQueue(garden, _gardens);
+        _gardens = GameManager.Instance.RemoveItemFromQueue((DamageableBuilding)garden, _gardens);
 
         if (_gardens.Count == 0)
         {
