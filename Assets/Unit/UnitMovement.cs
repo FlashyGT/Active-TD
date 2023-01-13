@@ -34,7 +34,7 @@ public class UnitMovement : MonoBehaviour
 
     protected virtual void Start()
     {
-        Unit = GetComponentInParent<Unit>();
+        GetUnit();
         Pathfinding = GetComponent<Pathfinding>();
         Unit.OnObjRespawn.AddListener(RestartMovement);
         HasFinishedLoading = true;
@@ -57,6 +57,8 @@ public class UnitMovement : MonoBehaviour
 
     public void RestartMovement()
     {
+        GetUnit();
+        
         if (Unit.ObjectHealth.IsDead() || !Unit.Parent.activeInHierarchy)
         {
             return;
@@ -192,5 +194,13 @@ public class UnitMovement : MonoBehaviour
         DestinationReached = true;
         StopMovement();
         RestartMovement();
+    }
+
+    private void GetUnit()
+    {
+        if (Unit == null)
+        {
+            Unit = GetComponentInParent<Unit>();   
+        }
     }
 }

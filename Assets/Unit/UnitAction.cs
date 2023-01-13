@@ -51,7 +51,7 @@ public class UnitAction : MonoBehaviour
         Item = UnitActionItem.Empty;
         CurrentDestination = _unitBaseLocation;
         ActionManager.Instance.UnitIsAvailable(_unitType, _unit);
-        _unit.Movement.InitMovement();
+        _unit.Movement.RestartMovement();
     }
 
     private void ChangeDestination()
@@ -59,7 +59,7 @@ public class UnitAction : MonoBehaviour
         if (_destinations.Count != 0)
         {
             CurrentDestination = _destinations.Dequeue();
-            _unit.Movement.InitMovement();
+            _unit.Movement.RestartMovement();
         }
     }
 
