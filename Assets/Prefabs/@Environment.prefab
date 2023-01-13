@@ -2370,10 +2370,40 @@ PrefabInstance:
       propertyPath: unitLocations.Array.data[1].z
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 3914909979704853281, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5149090180550798663, guid: cab7440913baa974092d1db9110f195f,
         type: 3}
       propertyPath: m_Layer
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619014880443565857, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.27059805
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619014880443565857, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.27059805
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619014880443565857, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6532815
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619014880443565857, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.6532815
+      objectReference: {fileID: 0}
+    - target: {fileID: 5619014880443565857, guid: cab7440913baa974092d1db9110f195f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 135
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cab7440913baa974092d1db9110f195f, type: 3}
