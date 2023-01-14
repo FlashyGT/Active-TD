@@ -10,11 +10,15 @@ public class PlayerMovement : UnitMovement
     private Vector2 _touchStartPos;
     private Vector3 _touchVelocity;
 
+    private int _velocityAnimHash;
+    
     #region UnityMethods
 
     protected override void Start()
     {
         Unit = GetComponentInParent<Unit>();
+        _runningAnimHash = Animator.StringToHash(Constants.AnimRunningParam);
+        _velocityAnimHash = Animator.StringToHash(Constants.AnimVelocityParam);
         HasFinishedLoading = true;
     }
 
@@ -37,9 +41,14 @@ public class PlayerMovement : UnitMovement
     {
         Unit.Rigidbody.velocity = Vector3.zero;
         Unit.Rigidbody.angularVelocity = Vector3.zero;
-        Unit.Animator.SetBool(Constants.AnimRunningParam, false);
+        Unit.Animator.SetBool(_runningAnimHash, false);
+        _timeMoving = 0f;
+        Unit.Animator.SetFloat(_velocityAnimHash, 0);
     }
 
+    private float _timeMoving = 0f;
+    private float _timeToMaxAcceleration = 1f;
+    
     protected override void Move()
     {
         if (!_touching)
@@ -49,8 +58,10 @@ public class PlayerMovement : UnitMovement
         }
 
         Vector3 newVelocity = _touchVelocity * (speed * Time.deltaTime);
-        Unit.Rigidbody.velocity = newVelocity;
-        Unit.Animator.SetBool(Constants.AnimRunningParam, true);
+        Unit.Rigidbody.velocity = Vector3.Lerp(Vector3.zero, newVelocity, _timeMoving / _timeToMaxAcceleration);
+        _timeMoving += Time.deltaTime * 2f;
+        Unit.Animator.SetBool(_runningAnimHash, true);
+        Unit.Animator.SetFloat(_velocityAnimHash, Unit.Rigidbody.velocity.magnitude);
     }
 
     protected override void Rotate()

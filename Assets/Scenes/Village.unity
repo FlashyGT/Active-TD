@@ -3580,11 +3580,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4806455986156978109, guid: 0b34f5360081bd54fbca64f269f1045b,
-        type: 3}
-      propertyPath: testing
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b34f5360081bd54fbca64f269f1045b, type: 3}
 --- !u!1001 &6716867009863006202
@@ -3653,11 +3648,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7593841723506485495, guid: 0b288377ac0294d49bc21f58c797189b,
-        type: 3}
-      propertyPath: moneyAmount
-      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 7593841723506485495, guid: 0b288377ac0294d49bc21f58c797189b,
         type: 3}
@@ -3787,11 +3777,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Environment
-      objectReference: {fileID: 0}
-    - target: {fileID: 6774449941364177255, guid: 858e4d8917d0284488d8f1746bc9798f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 858e4d8917d0284488d8f1746bc9798f, type: 3}

@@ -5,6 +5,7 @@ public class Constants : MonoBehaviour
     public const string AnimRunningParam = "Running";
     public const string AnimAttackParam = "Attacking";
     public const string AnimDeathParam = "Dead";
+    public const string AnimVelocityParam = "Velocity";
 
     public const string LayerEnvironment = "Environment";
     public const string LayerBarricade = "Barricade";

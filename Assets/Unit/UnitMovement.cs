@@ -28,6 +28,8 @@ public class UnitMovement : MonoBehaviour
 
     protected Pathfinding Pathfinding;
     
+    protected int _runningAnimHash;
+    
     private Vector3 _pathNodePos;
 
     #region UnityMethods
@@ -37,6 +39,7 @@ public class UnitMovement : MonoBehaviour
         GetUnit();
         Pathfinding = GetComponent<Pathfinding>();
         Unit.OnObjRespawn.AddListener(RestartMovement);
+        _runningAnimHash = Animator.StringToHash(Constants.AnimRunningParam);
         HasFinishedLoading = true;
     }
 
@@ -87,7 +90,7 @@ public class UnitMovement : MonoBehaviour
     {
         Unit.Rigidbody.velocity = Vector3.zero;
         Unit.Rigidbody.angularVelocity = Vector3.zero;
-        Unit.Animator.SetBool(Constants.AnimRunningParam, false);
+        Unit.Animator.SetBool(_runningAnimHash, false);
 
         if (!DestinationReached)
         {
@@ -106,7 +109,7 @@ public class UnitMovement : MonoBehaviour
                 StopCoroutine(UnitStuckCoroutine);
             }
 
-            Unit.Animator.SetBool(Constants.AnimRunningParam, true);
+            Unit.Animator.SetBool(_runningAnimHash, true);
             MovingToDestination = true;
         }
     }
